@@ -11,18 +11,38 @@ export const chatGptResponse = (message, onNewResponse) => {
     max_tokens: 60,
   };
 
+  const extraOptions = {
+    reactNative: { textStreaming: true },
+  };
+
+  // const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  //   method: "POST",
+  //   headers: this.commonHeaders,
+  //   body: JSON.stringify({
+  //     ...config,
+  //     stream: true,
+  //     messages,
+  //   }),
+  //   ...extraOptions,
+  // });
+  //
   fetch("https://api.openai.com/v1/chat/completions", {
     reactNative: { textStreaming: true },
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization:
-        "Bearer YOUR_API",
+      Authorization: "Bearer YOUR_API",
     },
     body: JSON.stringify(data),
+    ...extraOptions,
   })
     .then((response) => {
-      const reader = response.body.getReader();
+      const reader = response.body?.getReader();
+      if (!reader) {
+        console.error("Error: fail to read data from response");
+      }
+
+      // const reader = response.body.getReader();
 
       // Función para leer cada chunk del stream
       function read() {
@@ -44,7 +64,7 @@ export const chatGptResponse = (message, onNewResponse) => {
       return read(); // Comienza a leer el stream
     })
     .catch((error) =>
-      console.error("Error al solicitar la API de GPT-3.5 Turbo:", error)
+      console.error("Error al solicitar la API de GPT-3.5 Turbo:", error),
     );
 };
 
