@@ -10,20 +10,33 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  Modal,
 } from "react-native";
 import { streamChat } from "./src/services/openAI/ChatGPT";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const App = () => {
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const scrollViewRef = useRef();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [apiKey, setApiKey] = useState("");
 
   useEffect(() => {
+    const keyExists = AsyncStorage.getItem("openai");
+    if (!keyExists) {
+      setIsModalVisible(true);
+    }
     scrollViewRef.current.scrollToEnd({ animated: true });
   }, [messages]);
 
   const handleSend = async () => {
-    if (!inputText.trim()) return; // Previene envío de mensajes vacíos
+    if (!inputText.trim()) return; // Prevent sending empty messages
+    const storedApiKey = await AsyncStorage.getItem("openai");
+    if (!storedApiKey) {
+      setIsModalVisible(true);
+      return;
+    }
     setMessages((prev) => [
       ...prev,
       { role: "user", content: inputText.trim() },
@@ -44,6 +57,12 @@ const App = () => {
     setInputText("");
   };
 
+  const handleUpdateApiKey = async () => {
+    await AsyncStorage.setItem("openai", apiKey);
+    setIsModalVisible(false);
+    handleSend();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -54,13 +73,29 @@ const App = () => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={styles.keyboardAvoidingView}
       >
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+        >
+          <View style={styles.modalView}>
+            <Text>Please enter your OpenAI API key:</Text>
+            <TextInput
+              style={styles.modalInput}
+              value={apiKey}
+              onChangeText={setApiKey}
+              placeholder="API Key"
+            />
+            <Button title="Update" onPress={handleUpdateApiKey} />
+          </View>
+        </Modal>
         <ScrollView
           ref={scrollViewRef}
           contentInsetAdjustmentBehavior="automatic"
           style={styles.scrollView}
         >
           {messages.map((message, index) => (
-            <View key={index}>
+            <View key={index} style={styles.messageContainer}>
               <Text style={styles.messageLabel}>
                 {message.role.toUpperCase()}
               </Text>
@@ -91,7 +126,6 @@ const App = () => {
             onChangeText={setInputText}
             placeholder="Type a message..."
             returnKeyType="send"
-            // El resto de las props de TextInput irían aquí
           />
           <Button title="Send" onPress={handleSend} />
         </View>
@@ -104,6 +138,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+  },
+  modalView: {
+    marginTop: 50,
+    padding: 20,
+    backgroundColor: "white",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   header: {
     paddingVertical: 10,
@@ -134,22 +182,22 @@ const styles = StyleSheet.create({
     maxWidth: "90%",
     alignSelf: "flex-start",
     // backgroundColor: "#efefef",
-    marginLeft: 15, // Añadido para la alineación a la izquierda
+    marginLeft: 15,
   },
   userMessage: {
-    // backgroundColor: "#007aff", // Color azul de iOS para mensajes del usuario
+    // backgroundColor: "#007aff",
     alignSelf: "flex-start",
-    borderBottomLeftRadius: 0, // Para mensajes del usuario
+    borderBottomLeftRadius: 0,
   },
   gptMessage: {
-    // Se pueden remover los estilos si se manejan todos en messageBubble
+    //Styles can be removed if they are all managed in messageBubble
   },
   messageText: {
     fontSize: 16,
-    color: "#000", // Texto negro para mensajes del asistente
+    color: "#000",
   },
   userMessageText: {
-    color: "#000", // Texto blanco para mensajes del usuario
+    color: "#000",
   },
   input: {
     flex: 1,
@@ -157,7 +205,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
-    // backgroundColor: "#efefef", // Color de fondo para la entrada de texto
+    // backgroundColor: "#efefef",
     fontSize: 16,
     borderWidth: 1,
     borderColor: "#efefef",
@@ -165,7 +213,7 @@ const styles = StyleSheet.create({
   messageLabel: {
     fontSize: 12,
     color: "#999",
-    marginLeft: 15, // Alinea la etiqueta a la izquierda
+    marginLeft: 15,
   },
 });
 
