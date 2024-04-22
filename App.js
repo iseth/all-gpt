@@ -1,19 +1,18 @@
-import React, { useRef, useEffect, useState } from "react";
 import {
-  SafeAreaView,
-  StatusBar,
-  ScrollView,
+  View,
   Text,
   TextInput,
-  View,
+  ScrollView,
   Button,
-  StyleSheet,
+  SafeAreaView,
+  StatusBar,
+  Modal,
   KeyboardAvoidingView,
   Platform,
-  Modal,
 } from "react-native";
-import { streamChat } from "./src/services/openAI/ChatGPT";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { streamChat } from "./src/services/openAI/ChatGPT";
+import { useEffect, useRef, useState } from "react";
 
 const App = () => {
   const [inputText, setInputText] = useState("");
@@ -64,24 +63,24 @@ const App = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className={`flex-1 bg-white`}>
       <StatusBar barStyle="dark-content" />
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Chat</Text>
+      <View className={`py-2.5 px-4 items-center`}>
+        <Text className={`font-bold text-lg`}>Chat</Text>
       </View>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardAvoidingView}
+        className={`flex-1`}
       >
         <Modal
           animationType="slide"
           transparent={true}
           visible={isModalVisible}
         >
-          <View style={styles.modalView}>
+          <View className={`mt-12 p-5 bg-white items-center shadow-lg`}>
             <Text>Please enter your OpenAI API key:</Text>
             <TextInput
-              style={styles.modalInput}
+              className={`p-2.5 mt-1.5 rounded-lg border border-gray-200 w-full`}
               value={apiKey}
               onChangeText={setApiKey}
               placeholder="API Key"
@@ -92,26 +91,24 @@ const App = () => {
         <ScrollView
           ref={scrollViewRef}
           contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}
+          className={`flex-1`}
         >
           {messages.map((message, index) => (
-            <View key={index} style={styles.messageContainer}>
-              <Text style={styles.messageLabel}>
+            <View key={index} className={`mb-1.5 ml-3.5`}>
+              <Text className={`text-xs text-gray-400 ml-3.5`}>
                 {message.role.toUpperCase()}
               </Text>
               <View
-                style={[
-                  styles.messageBubble,
+                className={`px-2.5 py-2.5 rounded-full my-1.5 max-w-5/6 self-start ${
                   message.role === "user"
-                    ? styles.userMessage
-                    : styles.gptMessage,
-                ]}
+                    ? "self-start bg-gray-200"
+                    : "bg-gray-200"
+                }`}
               >
                 <Text
-                  style={[
-                    styles.messageText,
-                    message.role === "user" && styles.userMessageText,
-                  ]}
+                  className={`text-base ${
+                    message.role === "user" ? "text-black" : "text-black"
+                  }`}
                 >
                   {message.content}
                 </Text>
@@ -119,9 +116,9 @@ const App = () => {
             </View>
           ))}
         </ScrollView>
-        <View style={styles.inputContainer}>
+        <View className={`flex-row p-2.5 border-t border-gray-300`}>
           <TextInput
-            style={styles.input}
+            className={`flex-1 mr-2.5 rounded-full px-4 py-2.5 border border-gray-200 text-base`}
             value={inputText}
             onChangeText={setInputText}
             placeholder="Type a message..."
@@ -133,88 +130,5 @@ const App = () => {
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  modalView: {
-    marginTop: 50,
-    padding: 20,
-    backgroundColor: "white",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  header: {
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-    alignItems: "center",
-    // borderBottomWidth: 1,
-    // borderBottomColor: "#ccc",
-  },
-  headerText: {
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  keyboardAvoidingView: {
-    flex: 1,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    padding: 10,
-    borderTopColor: "#ccc",
-  },
-  messageBubble: {
-    padding: 10,
-    borderRadius: 20,
-    marginVertical: 5,
-    maxWidth: "90%",
-    alignSelf: "flex-start",
-    // backgroundColor: "#efefef",
-    marginLeft: 15,
-  },
-  userMessage: {
-    // backgroundColor: "#007aff",
-    alignSelf: "flex-start",
-    borderBottomLeftRadius: 0,
-  },
-  gptMessage: {
-    //Styles can be removed if they are all managed in messageBubble
-  },
-  messageText: {
-    fontSize: 16,
-    color: "#000",
-  },
-  userMessageText: {
-    color: "#000",
-  },
-  input: {
-    flex: 1,
-    marginRight: 10,
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    // backgroundColor: "#efefef",
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: "#efefef",
-  },
-  messageLabel: {
-    fontSize: 12,
-    color: "#999",
-    marginLeft: 15,
-  },
-});
 
 export default App;
