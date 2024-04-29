@@ -1,6 +1,5 @@
 import { View, Text, TextInput } from "react-native";
 import React from "react";
-import Icons from "../Icons/Icon";
 
 const InputPrompt = ({ inputText, setInputText, placeholder = "Message" }) => {
   return (
