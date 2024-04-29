@@ -16,6 +16,7 @@ import Icons from "./src/Components/Icons/Icon";
 import { ThemeProvider } from "./src/Context/ThemeContext";
 import HeaderRight from "./src/Components/Headers/HeaderRight";
 import HeaderTitle from "./src/Components/Headers/HeaderTitle";
+import Together from "./src/Screens/Together";
 
 const Drawer = createDrawerNavigator();
 
@@ -51,6 +52,18 @@ const App = () => {
             }}
             name="Chat"
             component={Chat}
+          />
+          <Drawer.Screen
+            options={{
+              title: "TogetherAI",
+              headerTitleAlign: "center",
+              headerTitle: () => (
+                <HeaderTitle options={options} title="Together" />
+              ),
+              headerRight: () => <HeaderRight />,
+            }}
+            name="Together"
+            component={Together}
           />
         </Drawer.Navigator>
       </NavigationContainer>
