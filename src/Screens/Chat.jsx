@@ -150,10 +150,7 @@ const Chat = () => {
               onPress={() => setIsModalVisible(true)}
               className="justify-center items-center h-screen"
             >
-              <Image
-                source={require("../../assets/chatgpt.png")}
-                className="w-[37px] h-[37px]"
-              />
+              <Text>update api key.</Text>
             </Pressable>
           )}
         </ScrollView>

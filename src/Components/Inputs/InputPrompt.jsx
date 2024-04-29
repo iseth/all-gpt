@@ -2,15 +2,7 @@ import { View, Text, TextInput } from "react-native";
 import React from "react";
 import Icons from "../Icons/Icon";
 
-const InputPrompt = ({
-  inputText,
-  setInputText,
-  placeholder = "Message",
-  sizeIcon = 25,
-  colorIcon = "#6B7280",
-  collectionIcon = "MaterialIcons",
-  iconName = "mic",
-}) => {
+const InputPrompt = ({ inputText, setInputText, placeholder = "Message" }) => {
   return (
     <View className="flex-row flex-1 border border-gray-200 rounded-full">
       <TextInput
@@ -20,16 +12,6 @@ const InputPrompt = ({
         placeholder={placeholder}
         returnKeyType="send"
       />
-      {inputText.length === 0 && (
-        <View className="justify-center mr-4">
-          <Icons
-            icon={iconName}
-            collection={collectionIcon}
-            size={sizeIcon}
-            color={colorIcon}
-          />
-        </View>
-      )}
     </View>
   );
 };

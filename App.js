@@ -21,22 +21,6 @@ import Together from "./src/Screens/Together";
 const Drawer = createDrawerNavigator();
 
 const App = () => {
-  const options = [
-    {
-      version: "3.5",
-      title: "GPT-3.5",
-      model: "gpt-3.5-turbo",
-      iconName: "flash-outline",
-      collectionName: "Ionicons",
-    },
-    {
-      version: "4",
-      title: "GPT-4",
-      model: "gpt-4",
-      iconName: "sparkles-outline",
-      collectionName: "Ionicons",
-    },
-  ];
   return (
     <ThemeProvider>
       <NavigationContainer>
@@ -45,25 +29,11 @@ const App = () => {
             options={{
               title: "ChatGPT",
               headerTitleAlign: "center",
-              headerTitle: () => (
-                <HeaderTitle options={options} title="ChatGPT" />
-              ),
+              headerTitle: () => <HeaderTitle title="ChatGPT" />,
               headerRight: () => <HeaderRight />,
             }}
             name="Chat"
             component={Chat}
-          />
-          <Drawer.Screen
-            options={{
-              title: "TogetherAI",
-              headerTitleAlign: "center",
-              headerTitle: () => (
-                <HeaderTitle options={options} title="Together" />
-              ),
-              headerRight: () => <HeaderRight />,
-            }}
-            name="Together"
-            component={Together}
           />
         </Drawer.Navigator>
       </NavigationContainer>
