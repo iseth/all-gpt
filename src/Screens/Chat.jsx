@@ -95,6 +95,7 @@ const Chat = () => {
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className={`flex-1`}
+        keyboardVerticalOffset={110}
       >
         <Modal
           animationType="slide"
@@ -135,9 +136,7 @@ const Chat = () => {
                     message.role === "user" ? "self-start" : ""
                   }`}
                 >
-                  <Text
-                    className={`text-base text-black`}
-                  >
+                  <Text className={`text-base text-black`}>
                     {message.content}
                   </Text>
                 </View>
@@ -162,7 +161,7 @@ const Chat = () => {
             />
           ))}
         </ScrollView>
-        <View className={`flex-row p-2.5`}>
+        <View className={`flex-row`}>
           <ButtonAdd handleOptions={handleSend} />
           <InputPrompt
             inputText={inputText}
