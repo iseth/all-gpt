@@ -2,6 +2,13 @@ import { View, Text } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import ModalSelect from "../Modals/ModalSelect";
 import { Picker } from "@react-native-picker/picker";
+import {
+  Menu,
+  MenuProvider,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+} from "react-native-popup-menu";
 
 const HeaderTitle = () => {
   const options = [
@@ -36,19 +43,24 @@ const HeaderTitle = () => {
   }, [selectedModel]);
 
   return (
-    <View className="w-full">
-      <Picker
-        mode="dropdown"
-        selectedValue={selectedModel}
-        style={{ width: 150, height: 44 }}
-        itemStyle={{ fontSize: 12 }}
-        onValueChange={(itemValue, itemIndex) => setSelectedModel(itemValue)}
-      >
-        {options.map((option, index) => (
-          <Picker.Item key={index} label={option.title} value={option.model} />
-        ))}
-      </Picker>
-    </View>
+    <MenuProvider style={{ width: 150, height: 44 }}>
+      <View className="w-full">
+        <Menu>
+          <MenuTrigger text="Select action" />
+          <MenuOptions>
+            <MenuOption onSelect={() => alert(`Save`)} text="Save" />
+            <MenuOption onSelect={() => alert(`Delete`)}>
+              <Text style={{ color: "red" }}>Delete</Text>
+            </MenuOption>
+            <MenuOption
+              onSelect={() => alert(`Not called`)}
+              disabled={true}
+              text="Disabled"
+            />
+          </MenuOptions>
+        </Menu>
+      </View>
+    </MenuProvider>
   );
 };
 
