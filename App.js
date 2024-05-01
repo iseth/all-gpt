@@ -7,6 +7,7 @@ import Chat from "./src/Screens/Chat";
 import { ThemeProvider } from "./src/Context/ThemeContext";
 import HeaderRight from "./src/Components/Headers/HeaderRight";
 import HeaderTitle from "./src/Components/Headers/HeaderTitle";
+import Settings from "./src/Screens/Settings";
 
 const Drawer = createDrawerNavigator();
 
@@ -19,11 +20,19 @@ const App = () => {
             options={{
               title: "ChatGPT",
               headerTitleAlign: "center",
-              headerTitle: () => <HeaderTitle title="ChatGPT" />,
+              headerTitle: () => <HeaderTitle />,
               headerRight: () => <HeaderRight />,
             }}
             name="Chat"
             component={Chat}
+          />
+          <Drawer.Screen
+            options={{
+              title: "Settings",
+              headerTitleAlign: "center",
+            }}
+            name="Settings"
+            component={Settings}
           />
         </Drawer.Navigator>
       </NavigationContainer>

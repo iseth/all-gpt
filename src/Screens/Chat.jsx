@@ -64,7 +64,7 @@ const Chat = () => {
         messages: [{ role: "user", content: inputText }],
         config,
         onChunk: (chunk) => {
-          setMessages((prev) => [...prev, { role: "gpt", content: chunk }]);
+          setMessages((prev) => [...prev, { content: chunk }]);
         },
       });
     } catch (error) {
@@ -124,21 +124,19 @@ const Chat = () => {
         >
           {messages.length > 0 ? (
             messages.map((message, index) => (
-              <View key={index} className={`mb-1.5 ml-3.5`}>
-                <Text className={`text-xs text-gray-400 ml-3.5`}>
-                  {message.role.toUpperCase()}
-                </Text>
+              <View key={index} className={`ml-3.5`}>
+                {message.role && (
+                  <Text className={`text-xs`}>
+                    {message.role.toUpperCase()}
+                  </Text>
+                )}
                 <View
-                  className={`px-2.5 py-2.5 rounded-full my-1.5 max-w-5/6 self-start ${
-                    message.role === "user"
-                      ? "self-start bg-gray-200"
-                      : "bg-gray-200"
+                  className={`rounded-full max-w-5/6 self-start ${
+                    message.role === "user" ? "self-start" : ""
                   }`}
                 >
                   <Text
-                    className={`text-base ${
-                      message.role === "user" ? "text-black" : "text-black"
-                    }`}
+                    className={`text-base text-black`}
                   >
                     {message.content}
                   </Text>

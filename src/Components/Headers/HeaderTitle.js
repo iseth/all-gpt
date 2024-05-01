@@ -1,8 +1,9 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ModalSelect from "../Modals/ModalSelect";
+import { Picker } from "@react-native-picker/picker";
 
-const HeaderTitle = ({ title = "chat" }) => {
+const HeaderTitle = () => {
   const options = [
     {
       version: "3.5",
@@ -26,14 +27,27 @@ const HeaderTitle = ({ title = "chat" }) => {
       collectionName: "Ionicons",
     },
   ];
+  const [selectedModel, setSelectedModel] = useState();
+
+  useEffect(() => {
+    if (selectedModel) {
+      console.log(selectedModel);
+    }
+  }, [selectedModel]);
+
   return (
-    <View className="w-full flex-row mt-3 justify-center items-center">
-      <View className="flex">
-        <Text className="text-lg font-bold">{title}</Text>
-      </View>
-      <View className="w-[20%]">
-        <ModalSelect options={options} />
-      </View>
+    <View className="w-full">
+      <Picker
+        mode="dropdown"
+        selectedValue={selectedModel}
+        style={{ width: 150, height: 44 }}
+        itemStyle={{ fontSize: 12 }}
+        onValueChange={(itemValue, itemIndex) => setSelectedModel(itemValue)}
+      >
+        {options.map((option, index) => (
+          <Picker.Item key={index} label={option.title} value={option.model} />
+        ))}
+      </Picker>
     </View>
   );
 };
