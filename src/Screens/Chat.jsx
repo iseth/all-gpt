@@ -161,32 +161,38 @@ const Chat = () => {
             />
           ))}
         </ScrollView>
-        <View className={`flex-row`}>
-          <ButtonAdd handleOptions={handleSend} />
-          <InputPrompt
-            inputText={inputText}
-            setInputText={setInputText}
-            collectionIcon="MaterialIcons"
-            colorIcon="#6B7280"
-            iconName="mic"
-            placeholder="Message"
-            sizeIcon={25}
-          />
-          <TouchableOpacity
-            className="items-center justify-center"
-            onPress={handleSend}
-          >
-            {inputText.length > 0 ? (
-              <Icons icon="send" collection="Feather" size={25} color="" />
-            ) : (
-              <Icons
-                icon="headset"
-                collection="MaterialIcons"
-                size={25}
-                color=""
-              />
-            )}
-          </TouchableOpacity>
+        <View className={`flex-row my-2 items-center`}>
+          <View className="mx-2">
+            <ButtonAdd handleOptions={handleSend} />
+          </View>
+          <View className="flex-1 h-[45px]">
+            <InputPrompt
+              inputText={inputText}
+              setInputText={setInputText}
+              collectionIcon="MaterialIcons"
+              colorIcon="#6B7280"
+              iconName="mic"
+              placeholder="Message"
+              sizeIcon={25}
+            />
+          </View>
+          <View className="mx-2">
+            <TouchableOpacity
+              className="items-center justify-center"
+              onPress={handleSend}
+            >
+              {inputText.length > 0 ? (
+                <Icons icon="send" collection="Feather" size={25} color="" />
+              ) : (
+                <Icons
+                  icon="headset"
+                  collection="MaterialIcons"
+                  size={25}
+                  color=""
+                />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

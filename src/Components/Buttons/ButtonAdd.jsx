@@ -4,19 +4,19 @@ import Icons from "../Icons/Icon";
 
 const ButtonAdd = ({ handleOptions }) => {
   return (
-    <View className="items-center justify-center mx-1">
-      <TouchableOpacity
-        className="items-center justify-center rounded-full h-[25px]"
-        onPress={handleOptions}
-      >
+    <TouchableOpacity
+      className="rounded-full h-[30px] w-[30px] p-[3px] bg-gray-100"
+      onPress={handleOptions}
+    >
+      <View className="justify-center items-center">
         <Icons
           icon="add"
           collection="MaterialIcons"
           size={25}
           color="#6B7280"
         />
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 
