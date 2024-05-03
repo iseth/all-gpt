@@ -27,7 +27,7 @@ const App = () => {
                   <View>
                     <HeaderTitle />
                   </View>
-                ), // Aquí faltaba una coma
+                ),
                 headerRight: () => <HeaderRight />,
               }}
               name="Chat"

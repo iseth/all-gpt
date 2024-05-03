@@ -28,7 +28,6 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const scrollViewRef = useRef();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [apiKey, setApiKey] = useState("");
   const data = [
     { title: "5 cooking tricks", description: "give me 5 cooking tricks" },
     { title: "3 car brands", description: "give me 3 car brands" },
@@ -40,7 +39,6 @@ const Chat = () => {
   useEffect(() => {
     const keyExists = AsyncStorage.getItem("openai");
     if (!keyExists) {
-      setIsModalVisible(true);
     }
     scrollViewRef.current.scrollToEnd({ animated: true });
   }, [messages]);
@@ -48,9 +46,7 @@ const Chat = () => {
   const handleSend = async () => {
     if (!inputText.trim()) return; // Prevent sending empty messages
     const storedApiKey = await AsyncStorage.getItem("openai");
-    console.log(storedApiKey,'apii')
     if (!storedApiKey) {
-      setIsModalVisible(true);
       return;
     }
     setMessages((prev) => [
@@ -74,12 +70,6 @@ const Chat = () => {
     setInputText("");
   };
 
-  const handleUpdateApiKey = async () => {
-    await AsyncStorage.setItem("openai", apiKey);
-    setIsModalVisible(false);
-    handleSend();
-  };
-
   useEffect(() => {
     if (refresh) {
       setMessages([]);
@@ -90,34 +80,12 @@ const Chat = () => {
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
       <StatusBar barStyle="dark-content" />
-      <View className={`py-2.5 px-4 items-center`}>
-        {/* <Text className={`font-bold text-lg`}>Chat</Text> */}
-      </View>
+      <View className={`py-2.5 px-4 items-center`}></View>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className={`flex-1`}
         keyboardVerticalOffset={110}
       >
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isModalVisible}
-        >
-          <View
-            className={`mt-[80px] p-5 bg-slate-100 mx-5 items-center shadow-lg rounded-lg`}
-          >
-            <Text>Please enter your OpenAI API key:</Text>
-            <TextInput
-              className={`p-2.5 mt-1.5 rounded-lg border border-gray-200 w-full`}
-              value={apiKey}
-              onChangeText={setApiKey}
-              placeholder="API Key"
-            />
-            <View className="mt-2">
-              <Button title="Update" onPress={handleUpdateApiKey} />
-            </View>
-          </View>
-        </Modal>
         <ScrollView
           scrollEnabled={messages.length > 0 ? true : false}
           ref={scrollViewRef}
@@ -144,10 +112,7 @@ const Chat = () => {
               </View>
             ))
           ) : (
-            <Pressable
-              onPress={() => setIsModalVisible(true)}
-              className="justify-center items-center h-screen"
-            >
+            <Pressable className="justify-center items-center h-screen">
               <Text>update api key.</Text>
             </Pressable>
           )}
@@ -189,7 +154,6 @@ const Chat = () => {
                   icon="headset"
                   collection="MaterialIcons"
                   size={25}
-                  color=""
                 />
               )}
             </TouchableOpacity>
