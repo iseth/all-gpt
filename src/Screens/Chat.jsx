@@ -48,6 +48,7 @@ const Chat = () => {
   const handleSend = async () => {
     if (!inputText.trim()) return; // Prevent sending empty messages
     const storedApiKey = await AsyncStorage.getItem("openai");
+    console.log(storedApiKey,'apii')
     if (!storedApiKey) {
       setIsModalVisible(true);
       return;
