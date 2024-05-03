@@ -28,7 +28,6 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const scrollViewRef = useRef();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [apiKey, setApiKey] = useState("");
   const data = [
     { title: "5 cooking tricks", description: "give me 5 cooking tricks" },
     { title: "3 car brands", description: "give me 3 car brands" },
@@ -40,7 +39,6 @@ const Chat = () => {
   useEffect(() => {
     const keyExists = AsyncStorage.getItem("openai");
     if (!keyExists) {
-      setIsModalVisible(true);
     }
     scrollViewRef.current.scrollToEnd({ animated: true });
   }, [messages]);
@@ -49,7 +47,6 @@ const Chat = () => {
     if (!inputText.trim()) return; // Prevent sending empty messages
     const storedApiKey = await AsyncStorage.getItem("openai");
     if (!storedApiKey) {
-      setIsModalVisible(true);
       return;
     }
     setMessages((prev) => [
@@ -64,19 +61,13 @@ const Chat = () => {
         messages: [{ role: "user", content: inputText }],
         config,
         onChunk: (chunk) => {
-          setMessages((prev) => [...prev, { role: "gpt", content: chunk }]);
+          setMessages((prev) => [...prev, { content: chunk }]);
         },
       });
     } catch (error) {
       console.error("Streaming error:", error);
     }
     setInputText("");
-  };
-
-  const handleUpdateApiKey = async () => {
-    await AsyncStorage.setItem("openai", apiKey);
-    setIsModalVisible(false);
-    handleSend();
   };
 
   useEffect(() => {
@@ -89,33 +80,12 @@ const Chat = () => {
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
       <StatusBar barStyle="dark-content" />
-      <View className={`py-2.5 px-4 items-center`}>
-        {/* <Text className={`font-bold text-lg`}>Chat</Text> */}
-      </View>
+      <View className={`py-2.5 px-4 items-center`}></View>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className={`flex-1`}
+        keyboardVerticalOffset={110}
       >
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={isModalVisible}
-        >
-          <View
-            className={`mt-[80px] p-5 bg-slate-100 mx-5 items-center shadow-lg rounded-lg`}
-          >
-            <Text>Please enter your OpenAI API key:</Text>
-            <TextInput
-              className={`p-2.5 mt-1.5 rounded-lg border border-gray-200 w-full`}
-              value={apiKey}
-              onChangeText={setApiKey}
-              placeholder="API Key"
-            />
-            <View className="mt-2">
-              <Button title="Update" onPress={handleUpdateApiKey} />
-            </View>
-          </View>
-        </Modal>
         <ScrollView
           scrollEnabled={messages.length > 0 ? true : false}
           ref={scrollViewRef}
@@ -124,32 +94,25 @@ const Chat = () => {
         >
           {messages.length > 0 ? (
             messages.map((message, index) => (
-              <View key={index} className={`mb-1.5 ml-3.5`}>
-                <Text className={`text-xs text-gray-400 ml-3.5`}>
-                  {message.role.toUpperCase()}
-                </Text>
+              <View key={index} className={`ml-3.5`}>
+                {message.role && (
+                  <Text className={`text-xs`}>
+                    {message.role.toUpperCase()}
+                  </Text>
+                )}
                 <View
-                  className={`px-2.5 py-2.5 rounded-full my-1.5 max-w-5/6 self-start ${
-                    message.role === "user"
-                      ? "self-start bg-gray-200"
-                      : "bg-gray-200"
+                  className={`rounded-full max-w-5/6 self-start ${
+                    message.role === "user" ? "self-start" : ""
                   }`}
                 >
-                  <Text
-                    className={`text-base ${
-                      message.role === "user" ? "text-black" : "text-black"
-                    }`}
-                  >
+                  <Text className={`text-base text-black`}>
                     {message.content}
                   </Text>
                 </View>
               </View>
             ))
           ) : (
-            <Pressable
-              onPress={() => setIsModalVisible(true)}
-              className="justify-center items-center h-screen"
-            >
+            <Pressable className="justify-center items-center h-screen">
               <Text>update api key.</Text>
             </Pressable>
           )}
@@ -164,32 +127,37 @@ const Chat = () => {
             />
           ))}
         </ScrollView>
-        <View className={`flex-row p-2.5`}>
-          <ButtonAdd handleOptions={handleSend} />
-          <InputPrompt
-            inputText={inputText}
-            setInputText={setInputText}
-            collectionIcon="MaterialIcons"
-            colorIcon="#6B7280"
-            iconName="mic"
-            placeholder="Message"
-            sizeIcon={25}
-          />
-          <TouchableOpacity
-            className="items-center justify-center"
-            onPress={handleSend}
-          >
-            {inputText.length > 0 ? (
-              <Icons icon="send" collection="Feather" size={25} color="" />
-            ) : (
-              <Icons
-                icon="headset"
-                collection="MaterialIcons"
-                size={25}
-                color=""
-              />
-            )}
-          </TouchableOpacity>
+        <View className={`flex-row my-2 items-center`}>
+          <View className="mx-2">
+            <ButtonAdd handleOptions={handleSend} />
+          </View>
+          <View className="flex-1 h-[45px]">
+            <InputPrompt
+              inputText={inputText}
+              setInputText={setInputText}
+              collectionIcon="MaterialIcons"
+              colorIcon="#6B7280"
+              iconName="mic"
+              placeholder="Message"
+              sizeIcon={25}
+            />
+          </View>
+          <View className="mx-2">
+            <TouchableOpacity
+              className="items-center justify-center"
+              onPress={handleSend}
+            >
+              {inputText.length > 0 ? (
+                <Icons icon="send" collection="Feather" size={25} color="" />
+              ) : (
+                <Icons
+                  icon="headset"
+                  collection="MaterialIcons"
+                  size={25}
+                />
+              )}
+            </TouchableOpacity>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>

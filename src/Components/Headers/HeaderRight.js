@@ -8,9 +8,9 @@ const HeaderRight = () => {
   return (
     <TouchableOpacity
       onPress={() => setRefresh(true)}
-      className="w-full items-center"
+      className="w-full items-end mr-2"
     >
-      <Icons icon="new-message" collection="Entypo" size={20} />
+      <Icons icon="new-message" collection="Entypo" size={20} color="#D1D5DB" />
     </TouchableOpacity>
   );
 };
