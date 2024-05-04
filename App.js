@@ -3,11 +3,11 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-import Chat from "./src/Screens/Chat";
-import { ThemeProvider } from "./src/Context/ThemeContext";
+import Chat from "./app/Chat";
+import { ThemeProvider } from "./app/Context/ThemeContext";
 import HeaderRight from "./src/Components/Headers/HeaderRight";
 import HeaderTitle from "./src/Components/Headers/HeaderTitle";
-import Settings from "./src/Screens/Settings";
+import Settings from "./app/Settings";
 import { MenuProvider } from "react-native-popup-menu";
 import { View } from "react-native";
 
