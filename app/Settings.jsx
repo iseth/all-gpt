@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icons from "../Components/Icons/Icon";
+import { Link, router } from "expo-router";
 
 const Settings = () => {
   const [openaiApiKey, setOpenaiApiKey] = useState("");
@@ -59,19 +60,21 @@ const Settings = () => {
     try {
       console.log(openaiApiKey);
       await AsyncStorage.setItem("together", togetherApiKey);
+      await AsyncStorage.setItem("openai", openaiApiKey);
       setOpenaiShowButton(false);
       setTogetherShowButton(false);
     } catch (error) {
       console.error("Error saving API keys to AsyncStorage:", error);
     }
   };
-
+  const isPresented = router.canGoBack();
   return (
-    <SafeAreaView className="flex-1 bg-slate-50">
+    <SafeAreaView className="flex-1 bg-slate-50 mt-3">
       <ScrollView className="mx-6 my-3 px-2">
         <View>
           <View className="mb-1 ml-3">
             <Text className="text-gray-400">SERVICES</Text>
+            {!isPresented && <Link href="../">Dismiss</Link>}
           </View>
           <View className="bg-white pl-4 py-2 rounded-lg">
             <TouchableOpacity className="flex-row items-center my-2">
