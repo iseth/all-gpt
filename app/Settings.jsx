@@ -60,6 +60,7 @@ const Settings = () => {
     try {
       console.log(openaiApiKey);
       await AsyncStorage.setItem("together", togetherApiKey);
+      await AsyncStorage.setItem("openai", openaiApiKey);
       setOpenaiShowButton(false);
       setTogetherShowButton(false);
     } catch (error) {
