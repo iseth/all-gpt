@@ -79,6 +79,7 @@ const Settings = () => {
           <View className="bg-white pl-4 py-2 rounded-lg">
             <TouchableOpacity className="flex-row items-center my-2">
               <View className="mr-2">
+                <Link href="/">Go back</Link>
                 <Icons
                   collection="MaterialCommunityIcons"
                   icon="email-outline"

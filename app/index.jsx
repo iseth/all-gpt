@@ -1,34 +1,31 @@
 import {
   View,
   Text,
-  TextInput,
   ScrollView,
-  Button,
   SafeAreaView,
   StatusBar,
-  Modal,
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
-  Image,
-  Pressable,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
 import { streamChat } from "../Services/openAI/ChatGPT";
 import Icons from "../Components/Icons/Icon";
-import CardRecomended from "../Components/Cards/CardRecomended";
+import CardRecomended from "../Components/Generic/CardRecomended";
 import { useTheme } from "../Context/ThemeContext";
 import InputPrompt from "../Components/Inputs/InputPrompt";
 import ButtonAdd from "../Components/Buttons/ButtonAdd";
 import { Link } from "expo-router";
+
+import { Messages } from "../Components/Chat";
 
 const Chat = () => {
   const { refresh, setRefresh } = useTheme();
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const scrollViewRef = useRef();
-  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const data = [
     { title: "5 cooking tricks", description: "give me 5 cooking tricks" },
     { title: "3 car brands", description: "give me 3 car brands" },
@@ -41,7 +38,6 @@ const Chat = () => {
     const keyExists = AsyncStorage.getItem("openai");
     if (!keyExists) {
     }
-    scrollViewRef.current.scrollToEnd({ animated: true });
   }, [messages]);
 
   const handleSend = async () => {
@@ -88,43 +84,20 @@ const Chat = () => {
         keyboardVerticalOffset={110}
       >
         <View className="h-10 items-start justify-center">
-          <Link  href="/Settings" asChild>
+          <Link href="/settings" asChild>
             <TouchableOpacity className="ml-2">
-              <Icons icon="settings" size={30} collection="Ionicons" />
+              <Text className="text-5xl">Settings</Text>
             </TouchableOpacity>
           </Link>
+          {/* <Link href="/Settings" asChild> */}
+          {/*   <TouchableOpacity className="ml-2"> */}
+          {/*     <Icons icon="settings" size={30} collection="Ionicons" /> */}
+          {/*   </TouchableOpacity> */}
+          {/* </Link> */}
         </View>
-        <ScrollView
-          scrollEnabled={messages.length > 0 ? true : false}
-          ref={scrollViewRef}
-          contentInsetAdjustmentBehavior="automatic"
-          className={`flex-1`}
-        >
-          {messages.length > 0 ? (
-            messages.map((message, index) => (
-              <View key={index} className={`ml-3.5`}>
-                {message.role && (
-                  <Text className={`text-xs`}>
-                    {message.role.toUpperCase()}
-                  </Text>
-                )}
-                <View
-                  className={`rounded-full max-w-5/6 self-start ${
-                    message.role === "user" ? "self-start" : ""
-                  }`}
-                >
-                  <Text className={`text-base text-black`}>
-                    {message.content}
-                  </Text>
-                </View>
-              </View>
-            ))
-          ) : (
-            <Pressable className="justify-center items-center h-screen">
-              <Text>update api key.</Text>
-            </Pressable>
-          )}
-        </ScrollView>
+
+        <Messages messages={messages} scrollViewRef={scrollViewRef} />
+
         <ScrollView className="h-0 max-h-[100px] py-2 mx-1" horizontal={true}>
           {data.map((card, index) => (
             <CardRecomended

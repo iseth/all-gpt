@@ -33,14 +33,6 @@ const App = () => {
               name="Chat"
               component={Chat}
             />
-            <Drawer.Screen
-              options={{
-                title: "Settings",
-                headerTitleAlign: "center",
-              }}
-              name="Settings"
-              component={Settings}
-            />
           </Drawer.Navigator>
         </NavigationContainer>
       </ThemeProvider>

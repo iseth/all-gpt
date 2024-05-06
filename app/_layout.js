@@ -1,4 +1,4 @@
-import { Slot, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { Platform, Text } from "react-native";
 import { MenuProvider } from "react-native-popup-menu";
 import { ThemeProvider } from "../Context/ThemeContext";
@@ -39,11 +39,21 @@ export default function HomeLayout() {
               }}
             />
             <Stack.Screen
-              name="Settings"
+              name="settings/index"
+              title="Settings"
+              options={{
+                // Set the presentation mode to modal for our modal route.
+                headerTitle: "Settings",
+                presentation: "modal",
+                headerShown: true,
+              }}
+            />
+            <Stack.Screen
+              name="API Keys"
               options={{
                 // Set the presentation mode to modal for our modal route.
                 presentation: "modal",
-                headerShown: false,
+                // headerShown: false,
               }}
             />
           </Stack>
