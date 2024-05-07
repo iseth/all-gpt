@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { FlatList } from "react-native";
+import { FlatList, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, ScrollView } from "react-native";
 
@@ -22,15 +22,17 @@ const Settings = () => {
               <View style={defaultStyles.separator} />
             )}
             renderItem={({ item }) => (
-              <View style={defaultStyles.item}>
-                <Text>{item.title}</Text>
-                <Text style={{ fontSize: 18, flex: 1 }}>{item.name}</Text>
-                <Ionicons
-                  name="chevron-forward"
-                  size={20}
-                  color={Colors.gray}
-                />
-              </View>
+              <Link href="settings/api-keys" asChild>
+                <Pressable style={defaultStyles.item}>
+                  <Text>{item.title}</Text>
+                  <Text style={{ fontSize: 18, flex: 1 }}>{item.name}</Text>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={20}
+                    color={Colors.gray}
+                  />
+                </Pressable>
+              </Link>
             )}
           />
         </View>
