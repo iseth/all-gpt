@@ -2,11 +2,11 @@ import { Link, router } from "expo-router";
 import { FlatList, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, ScrollView } from "react-native";
-
 import Colors from "../../constants/Colors";
 import { defaultStyles } from "../../constants/Styles";
 
 const Settings = () => {
+
   const items = [{ title: "API Keys" }];
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
