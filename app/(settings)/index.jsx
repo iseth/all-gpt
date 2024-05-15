@@ -1,15 +1,26 @@
-import { Link, router } from "expo-router";
-import { FlatList, Pressable } from "react-native";
+import { Link, useNavigation } from "expo-router";
+import { FlatList, Pressable, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, ScrollView } from "react-native";
+
 import Colors from "../../constants/Colors";
 import { defaultStyles } from "../../constants/Styles";
 
-const Settings = () => {
+import Icons from "../../Components/Icons/Icon";
 
+const Settings = () => {
+  const navigation = useNavigation();
   const items = [{ title: "API Keys" }];
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
+      <View className="mt-10 ml-5 flex-row items-center">
+        <TouchableOpacity onPress={()=>navigation.goBack()}>
+          <Icons collection="AntDesign" icon="arrowleft" size={20} />
+        </TouchableOpacity>
+        <View className="mx-2">
+          <Text className="text-xl">Settings</Text>
+        </View>
+      </View>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={{ paddingBottom: 40 }}
@@ -22,7 +33,7 @@ const Settings = () => {
               <View style={defaultStyles.separator} />
             )}
             renderItem={({ item }) => (
-              <Link href="settings/api-keys" asChild>
+              <Link href="(settings)/api-keys" asChild>
                 <Pressable style={defaultStyles.item}>
                   <Text>{item.title}</Text>
                   <Text style={{ fontSize: 18, flex: 1 }}>{item.name}</Text>

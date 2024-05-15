@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { defaultStyles } from "../../../constants/Styles";
 import Colors from "../../../constants/Colors";
+import Icons from "../../../Components/Icons/Icon";
 
 const UpdateApi = () => {
+  const navigation = useNavigation();
   const { api } = useLocalSearchParams();
   const [inputText, setInputText] = useState("");
 
@@ -34,6 +36,14 @@ const UpdateApi = () => {
 
   return (
     <View style={{ flex: 1, backgroundColor: Colors.background }}>
+      <View className="mt-10 ml-5 flex-row items-center">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icons collection="AntDesign" icon="arrowleft" size={20} />
+        </TouchableOpacity>
+        <View className="mx-2">
+          <Text className="text-xl">{api}</Text>
+        </View>
+      </View>
       <View>
         <View>
           <View

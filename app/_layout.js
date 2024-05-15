@@ -30,7 +30,7 @@ export default function HomeLayout() {
     <>
       <MenuProvider>
         <ThemeProvider>
-          <Stack>
+          {/* <Stack>
             <Stack.Screen
               name="index"
               options={{
@@ -60,7 +60,55 @@ export default function HomeLayout() {
                 headerTitle: route.params.api,
               })}
             />
-          </Stack>
+          </Stack> */}
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <Drawer>
+              <Drawer.Screen
+                name="index"
+                options={{
+                  drawerLabel: "Home",
+                  title: "Settings",
+                }}
+              />
+              <Drawer.Screen
+                name="(settings)"
+                options={{
+                  headerShown: false,
+                  drawerLabel: "Settings",
+                  title: "Settings",
+                }}
+              />
+              <Drawer.Screen
+                name="Settings-old"
+                options={{
+                  headerShown: false,
+                  drawerItemStyle: { display: "none" },
+                }}
+              />
+              <Drawer.Screen
+                name="settings/api-keys"
+                options={{
+                  headerShown: false,
+                  drawerItemStyle: { display: "none" },
+                }}
+              />
+              <Drawer.Screen
+                name="settings/index"
+                options={{
+                  title: "Settings",
+                  headerShown: false,
+                  drawerItemStyle: { display: "none" },
+                }}
+              />
+              <Drawer.Screen
+                name="settings/update/[api]"
+                options={{
+                  headerShown: false,
+                  drawerItemStyle: { display: "none" },
+                }}
+              />
+            </Drawer>
+          </GestureHandlerRootView>
         </ThemeProvider>
       </MenuProvider>
     </>
