@@ -85,28 +85,6 @@ export default function HomeLayout() {
                   drawerItemStyle: { display: "none" },
                 }}
               />
-              <Drawer.Screen
-                name="settings/api-keys"
-                options={{
-                  headerShown: false,
-                  drawerItemStyle: { display: "none" },
-                }}
-              />
-              <Drawer.Screen
-                name="settings/index"
-                options={{
-                  title: "Settings",
-                  headerShown: false,
-                  drawerItemStyle: { display: "none" },
-                }}
-              />
-              <Drawer.Screen
-                name="settings/update/[api]"
-                options={{
-                  headerShown: false,
-                  drawerItemStyle: { display: "none" },
-                }}
-              />
             </Drawer>
           </GestureHandlerRootView>
         </ThemeProvider>
