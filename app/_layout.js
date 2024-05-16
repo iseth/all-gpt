@@ -76,6 +76,7 @@ export default function HomeLayout() {
                   headerShown: false,
                   drawerLabel: "Settings",
                   title: "Settings",
+                  swipeEdgeWidth: 0,
                 }}
               />
               <Drawer.Screen
