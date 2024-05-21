@@ -19,7 +19,6 @@ const Settings = () => {
       router.navigate("/");
     }
   };
-  const items = [{ title: "API Keys" }];
   // Create a function component for a Pressable Item
   const PressableItem = ({ href, iconCollection, iconName, text }) => {
     const [isPressed, setIsPressed] = useState(false);
@@ -46,38 +45,19 @@ const Settings = () => {
       <View style={{ flex: 1, backgroundColor: Colors.background }}>
         <View className="mt-10 ml-5 flex-row items-center">
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icons collection="AntDesign" icon="arrowleft" size={20} />
+            <Icons collection="Entypo" icon="chevron-left" size={20} />
           </TouchableOpacity>
           <View className="mx-2 flex-1 items-center">
             <Text className="text-xl">Settings</Text>
           </View>
+          <View className="w-[10%]"/>
         </View>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           contentContainerStyle={{ paddingBottom: 40 }}
         >
-          <View className="mt-[20px] ml-[16px]">
-            {/* <FlatList
-            scrollEnabled={false}
-            data={items}
-            ItemSeparatorComponent={() => (
-              <View style={defaultStyles.separator} />
-            )}
-            renderItem={({ item }) => (
-              <Link href="(settings)/api-keys" asChild>
-                <Pressable style={defaultStyles.item}>
-                  <Text>{item.title}</Text>
-                  <Text style={{ fontSize: 18, flex: 1 }}>{item.name}</Text>
-                  <Ionicons
-                    name="chevron-forward"
-                    size={20}
-                    color={Colors.gray}
-                  />
-                </Pressable>
-              </Link>
-            )}
-          /> */}
-            <View className="my-2">
+          <View className="mt-[20px]">
+            <View className="my-2 ml-[16px]">
               <View>
                 <Text className="text-xl font-bold">Models</Text>
               </View>
@@ -88,7 +68,8 @@ const Settings = () => {
                 text="Api Keys"
               />
             </View>
-            <View className="my-2">
+            <View className="border-b-[1px] mx-[6px] border-gray-300"/>
+            <View className="my-2 ml-[16px]">
               <View>
                 <Text className="text-xl font-bold">App</Text>
               </View>
@@ -105,7 +86,9 @@ const Settings = () => {
                 text="Haptic FeedBack"
               />
             </View>
-            <View className="my-2">
+            <View className="border-b-[1px] mx-[6px] border-gray-300"/>
+
+            <View className="my-2 ml-[16px]">
               <View>
                 <Text className="text-xl font-bold">About</Text>
               </View>
@@ -124,7 +107,7 @@ const Settings = () => {
             </View>
           </View>
         </ScrollView>
-        <View className="my-2">
+        <View className="my-2 ml-[16px]">
           <View className="flex-row items-center justify-center">
             <View>
               <Icons icon={"circle"} collection={"Entypo"} />

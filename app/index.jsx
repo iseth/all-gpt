@@ -41,6 +41,7 @@ const Chat = () => {
   }, [messages]);
 
   const handleSend = async () => {
+    console.log("handle");
     if (!inputText.trim()) return; // Prevent sending empty messages
     const storedApiKey = await AsyncStorage.getItem("openai");
     if (!storedApiKey) {
@@ -51,14 +52,14 @@ const Chat = () => {
       { role: "user", content: inputText.trim() },
     ]);
     const model = await AsyncStorage.getItem("ModelOpenai");
-    const config = { model: model ? model : "gpt-3.5-turbo", max_tokens: 60 };
+    const config = { model: model ? model : "gpt-3.5-turbo", max_tokens: 200 };
 
     try {
       await streamChat({
         messages: [{ role: "user", content: inputText }],
         config,
         onChunk: (chunk) => {
-          setMessages((prev) => [...prev, { content: chunk }]);
+          setMessages((prev) => [...prev, { role: "AI", content: chunk }]);
         },
       });
     } catch (error) {
@@ -77,18 +78,18 @@ const Chat = () => {
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
       <StatusBar barStyle="dark-content" />
-      <View className={`py-2.5 px-4 items-center`}></View>
+      <View className={`py-2.5 px-4 items-center`} />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         className={`flex-1`}
         keyboardVerticalOffset={110}
       >
         <View className="h-10 items-start justify-center">
-          <Link href="/settings" asChild>
+          {/* <Link href="/settings" asChild>
             <TouchableOpacity className="ml-2">
               <Text className="text-5xl">Settings</Text>
             </TouchableOpacity>
-          </Link>
+          </Link> */}
           {/* <Link href="/Settings" asChild> */}
           {/*   <TouchableOpacity className="ml-2"> */}
           {/*     <Icons icon="settings" size={30} collection="Ionicons" /> */}
@@ -109,7 +110,7 @@ const Chat = () => {
           ))}
         </ScrollView>
         <View className={`flex-row my-2 items-center`}>
-          <View className="mx-2">
+          <View className="ml-[16px]">
             <ButtonAdd handleOptions={handleSend} />
           </View>
           <View className="flex-1 h-[45px]">
@@ -121,19 +122,8 @@ const Chat = () => {
               iconName="mic"
               placeholder="Message"
               sizeIcon={25}
+              handleSend={handleSend}
             />
-          </View>
-          <View className="mx-2">
-            <TouchableOpacity
-              className="items-center justify-center"
-              onPress={handleSend}
-            >
-              {inputText.length > 0 ? (
-                <Icons icon="send" collection="Feather" size={25} color="" />
-              ) : (
-                <Icons icon="headset" collection="MaterialIcons" size={25} />
-              )}
-            </TouchableOpacity>
           </View>
         </View>
       </KeyboardAvoidingView>

@@ -45,20 +45,21 @@ const UpdateApi = () => {
       <View style={{ flex: 1, backgroundColor: Colors.background }}>
         <View className="mt-10 ml-5 flex-row items-center">
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icons collection="AntDesign" icon="arrowleft" size={20} />
+            <Icons collection="Entypo" icon="chevron-left" size={20} />
           </TouchableOpacity>
-          <View className="mx-2">
+          <View className="mx-2 flex-1 items-center">
             <Text className="text-xl">{api}</Text>
           </View>
+          <View className="w-[10%]" />
         </View>
         <View>
           <View>
             <View
-              className={`flex-row border border-gray-200 bg-white rounded-lg mx-2 mt-3`}
+              className={`flex-row bg-gray-300 rounded-[5px] mx-[16px] mt-5`}
             >
               <TextInput
                 className={`flex-1 mr-2.5 px-4 py-2.5 text-base`}
-                placeholder="Enter API Key"
+                placeholder="sk-sUjO..........."
                 value={inputText}
                 onChangeText={setInputText}
                 returnKeyType="done"
