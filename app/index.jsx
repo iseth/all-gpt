@@ -16,6 +16,8 @@ import CardRecomended from "../Components/Generic/CardRecomended";
 import { useTheme } from "../Context/ThemeContext";
 import InputPrompt from "../Components/Inputs/InputPrompt";
 import ButtonAdd from "../Components/Buttons/ButtonAdd";
+import { useSQLiteContext } from "expo-sqlite";
+
 import { Link } from "expo-router";
 
 import { Messages } from "../Components/Chat";
@@ -25,6 +27,7 @@ const Chat = () => {
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const scrollViewRef = useRef();
+  const db = useSQLiteContext();
 
   const data = [
     { title: "5 cooking tricks", description: "give me 5 cooking tricks" },
@@ -74,6 +77,15 @@ const Chat = () => {
       setRefresh(false);
     }
   }, [refresh]);
+
+  const getdata = async () => {
+    const firstRow = await db.getFirstAsync("SELECT * FROM chat");
+    console.log(firstRow);
+  };
+
+  useEffect(() => {
+    getdata();
+  }, []);
 
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
