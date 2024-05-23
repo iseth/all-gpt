@@ -18,17 +18,18 @@ import InputPrompt from "../Components/Inputs/InputPrompt";
 import ButtonAdd from "../Components/Buttons/ButtonAdd";
 import { useSQLiteContext } from "expo-sqlite";
 
-import { Link } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 
 import { Messages } from "../Components/Chat";
 
 const Chat = () => {
-  const { refresh, setRefresh } = useTheme();
+  const { title, sms, iden } = useLocalSearchParams();
+  const { refresh, setRefresh, setLoadData } = useTheme();
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
+  const [id, setId] = useState(null);
   const scrollViewRef = useRef();
   const db = useSQLiteContext();
-
   const data = [
     { title: "5 cooking tricks", description: "give me 5 cooking tricks" },
     { title: "3 car brands", description: "give me 3 car brands" },
@@ -41,19 +42,32 @@ const Chat = () => {
     const keyExists = AsyncStorage.getItem("openai");
     if (!keyExists) {
     }
+
+    if (id !== null && messages.length > 0) {
+      updateData();
+    }
   }, [messages]);
 
   const handleSend = async () => {
-    console.log("handle");
     if (!inputText.trim()) return; // Prevent sending empty messages
     const storedApiKey = await AsyncStorage.getItem("openai");
     if (!storedApiKey) {
       return;
     }
+    if (messages.length === 0) {
+      const result = await db.runAsync(
+        "INSERT INTO chat (title, messages) VALUES (?, ?)",
+        `${inputText.trim()}`,
+        `${JSON.stringify(messages)}`
+      );
+      setId(result.lastInsertRowId);
+      setLoadData(true);
+    }
     setMessages((prev) => [
       ...prev,
       { role: "user", content: inputText.trim() },
     ]);
+
     const model = await AsyncStorage.getItem("ModelOpenai");
     const config = { model: model ? model : "gpt-3.5-turbo", max_tokens: 200 };
 
@@ -79,13 +93,39 @@ const Chat = () => {
   }, [refresh]);
 
   const getdata = async () => {
-    const firstRow = await db.getFirstAsync("SELECT * FROM chat");
+    const firstRow = await db.getAllAsync("SELECT * FROM chat");
     console.log(firstRow);
   };
 
+  // useEffect(() => {
+  //   getdata();
+  // }, []);
+
+  const updateData = async () => {
+    try {
+      await db.runAsync("UPDATE chat SET messages = ? WHERE id = ?", [
+        JSON.stringify(messages),
+        id,
+      ]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getShowData = async () => {
+    const row = await db.getFirstAsync(`SELECT * FROM chat WHERE id=${iden}`);
+    setMessages(JSON.parse(row.messages));
+  };
+
   useEffect(() => {
-    getdata();
-  }, []);
+    if (iden !== undefined) {
+      setId(iden);
+      getShowData();
+    } else {
+      setId();
+      setMessages([]);
+    }
+  }, [iden]);
 
   return (
     <SafeAreaView className={`flex-1 bg-white`}>
