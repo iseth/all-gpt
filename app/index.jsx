@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
-import { streamChat } from "../Services/openAI/ChatGPT";
+import { streamChatOpenAI } from "../Services/openAI/ChatGPT";
 import Icons from "../Components/Icons/Icon";
 import CardRecomended from "../Components/Generic/CardRecomended";
 import { useTheme } from "../Context/ThemeContext";
@@ -21,10 +21,12 @@ import { useSQLiteContext } from "expo-sqlite";
 import { useLocalSearchParams } from "expo-router";
 
 import { Messages } from "../Components/Chat";
+import { streamChatTogether } from "../Services/togetherAi/ChatTogether";
 
 const Chat = () => {
-  const { title, sms, iden } = useLocalSearchParams();
-  const { refresh, setRefresh, setLoadData } = useTheme();
+  const { iden } = useLocalSearchParams();
+  const { refresh, setRefresh, setLoadData, optionModel, setEnableSelect } =
+    useTheme();
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const [id, setId] = useState(null);
@@ -45,12 +47,20 @@ const Chat = () => {
 
     if (id !== null && messages.length > 0) {
       updateData();
+      setEnableSelect(true);
+    } else {
+      setEnableSelect(false);
     }
   }, [messages]);
 
   const handleSend = async () => {
     if (!inputText.trim()) return; // Prevent sending empty messages
-    const storedApiKey = await AsyncStorage.getItem("openai");
+
+    const IAs = {
+      openai: streamChatOpenAI,
+      together: streamChatTogether,
+    };
+    const storedApiKey = await AsyncStorage.getItem(optionModel.api);
     if (!storedApiKey) {
       return;
     }
@@ -68,16 +78,19 @@ const Chat = () => {
       { role: "user", content: inputText.trim() },
     ]);
 
-    const model = await AsyncStorage.getItem("ModelOpenai");
-    const config = { model: model ? model : "gpt-3.5-turbo", max_tokens: 200 };
-
+    // const model = await AsyncStorage.getItem("ModelOpenai");
+    const config = {
+      model: optionModel ? optionModel.model : "gpt-3.5-turbo",
+      max_tokens: 200,
+    };
     try {
-      await streamChat({
+      await IAs[optionModel.api]({
         messages: [{ role: "user", content: inputText }],
         config,
         onChunk: (chunk) => {
           setMessages((prev) => [...prev, { role: "AI", content: chunk }]);
         },
+        url: optionModel.url,
       });
     } catch (error) {
       console.error("Streaming error:", error);
@@ -89,17 +102,13 @@ const Chat = () => {
     if (refresh) {
       setMessages([]);
       setRefresh(false);
+      setEnableSelect(false);
     }
   }, [refresh]);
 
-  const getdata = async () => {
-    const firstRow = await db.getAllAsync("SELECT * FROM chat");
-    console.log(firstRow);
-  };
-
-  // useEffect(() => {
-  //   getdata();
-  // }, []);
+  useEffect(() => {
+    setEnableSelect(false);
+  }, []);
 
   const updateData = async () => {
     try {

@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextDecoder } from "text-encoding";
 
 // This function now retrieves the AsyncStorage API key and uses it to authorize the request
-export async function streamChat(args) {
-  const { messages, config, onChunk } = args;
+export async function streamChatOpenAI(args) {
+  const { messages, config, onChunk, url } = args;
 
   // Retrieve API key from AsyncStorage
   const apiKey = await AsyncStorage.getItem("openai");
@@ -21,7 +21,7 @@ export async function streamChat(args) {
     reactNative: { textStreaming: true },
   };
 
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const response = await fetch(url, {
     method: "POST",
     headers: commonHeaders,
     body: JSON.stringify({

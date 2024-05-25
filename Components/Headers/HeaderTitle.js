@@ -7,17 +7,32 @@ import {
   MenuTrigger,
 } from "react-native-popup-menu";
 import Icons from "../Icons/Icon";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { useTheme } from "../../Context/ThemeContext";
 
 const HeaderTitle = () => {
+  const { setOptionModel, enableSelect } = useTheme();
   const [selectedOption, setSelectedOption] = useState("GPT-3.5");
 
   const options = [
+    {
+      version: "3",
+      title: "LLaMA-3",
+      model: "meta-llama/Llama-3-8b-chat-hf",
+      iconName: "sparkles-outline",
+      collectionName: "Ionicons",
+      api: "together",
+      url: "https://api.together.xyz/v1/chat/completions",
+    },
     {
       version: "3.5",
       title: "ChatGPT 3.5",
       model: "gpt-3.5-turbo",
       iconName: "flash-outline",
       collectionName: "Ionicons",
+      api: "openai",
+      url: "https://api.openai.com/v1/chat/completions",
     },
     {
       version: "4",
@@ -25,24 +40,20 @@ const HeaderTitle = () => {
       model: "gpt-4",
       iconName: "sparkles-outline",
       collectionName: "Ionicons",
-    },
-    {
-      version: "3",
-      title: "LLaMA-3",
-      model: "LLaMA-3 Chat (70B)",
-      iconName: "sparkles-outline",
-      collectionName: "Ionicons",
+      api: "openai",
+      url: "https://api.openai.com/v1/chat/completions",
     },
   ];
 
-  const handleSelect = (title) => {
-    setSelectedOption(title);
+  const handleSelect = async (option) => {
+    setSelectedOption(option.title);
+    setOptionModel(option);
   };
 
   return (
     <View style={styles.menuContainer}>
       <Menu>
-        <MenuTrigger>
+        <MenuTrigger disabled={enableSelect}>
           <View className="flex-row items-center">
             <Text className="text-[16px]">
               {selectedOption || "Select action"}
@@ -54,7 +65,7 @@ const HeaderTitle = () => {
           {options.map((option, index) => (
             <MenuOption
               key={option.version}
-              onSelect={() => handleSelect(option.title)}
+              onSelect={() => handleSelect(option)}
               style={{
                 paddingHorizontal: 10,
                 ...(Platform.OS === "ios"
@@ -113,7 +124,7 @@ const styles = StyleSheet.create({
   menuOptions: {
     marginTop: 30,
     paddingVertical: 5,
-    width:'63%',
+    width: "63%",
     backgroundColor: Platform.OS === "ios" ? "#FFF" : "#E5E7EB",
     borderRadius: Platform.OS === "ios" ? 15 : 5,
     marginRight: Platform.OS === "ios" ? "10%" : 0,

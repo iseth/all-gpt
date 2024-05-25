@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextDecoder } from "text-encoding";
 
 // This function now retrieves the AsyncStorage API key and uses it to authorize the request
-export async function streamChat(args) {
-  const { messages, config, onChunk } = args;
+export async function streamChatTogether(args) {
+  const { messages, config, onChunk, url } = args;
 
   // Retrieve API key from AsyncStorage
   const apiKey = await AsyncStorage.getItem("together");
@@ -21,7 +21,7 @@ export async function streamChat(args) {
     reactNative: { textStreaming: true },
   };
 
-  const response = await fetch("https://api.together.xyz/v1/chat/completions", {
+  const response = await fetch(url, {
     method: "POST",
     headers: commonHeaders,
     body: JSON.stringify({
@@ -31,7 +31,6 @@ export async function streamChat(args) {
     }),
     ...extraOptions,
   });
-  console.log(response, "responseeee");
   if (!response.ok) {
     throw new Error(`Error: ${response.statusText}`);
   }
@@ -40,7 +39,6 @@ export async function streamChat(args) {
 }
 
 async function readChunks(response, onChunk) {
-  console.log(response, "response");
   const reader = response.body?.getReader();
   if (!reader) {
     throw new Error("Error: fail to read data from response");

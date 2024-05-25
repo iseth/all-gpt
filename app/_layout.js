@@ -14,6 +14,7 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { useEffect, useState } from "react";
+import Icons from "../Components/Icons/Icon";
 
 export default function HomeLayout() {
   if (Platform.OS !== "web") {
@@ -38,7 +39,7 @@ export default function HomeLayout() {
   }
 
   function CustomDrawerContent(props) {
-    const { setLoadData, loadData } = useTheme();
+    const { setLoadData, loadData, setRefresh } = useTheme();
     const [rows, setRows] = useState([]);
     const router = useRouter();
     const db = useSQLiteContext();
@@ -59,42 +60,68 @@ export default function HomeLayout() {
     }, [loadData]);
 
     return (
-      <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props} />
+      <>
+        <DrawerContentScrollView {...props}>
+          <DrawerItemList {...props} />
+          <DrawerItem
+            label={() => (
+              <Text className="text-gray-500 font-semibold">New Chat</Text>
+            )}
+            onPress={() => {
+              setRefresh(true);
+              router.push({
+                pathname: "/",
+              });
+            }}
+          />
+          <View>
+            <View className="border border-b-[1px] border-gray-200 mx-2 mb-2" />
+            <Text className="text-sm text-gray-500 ml-4">History</Text>
+          </View>
+          {rows.length > 0 &&
+            rows.map((row, index) => (
+              <DrawerItem
+                key={index}
+                label={() => (
+                  <Text className="text-black font-semibold">{row.title}</Text>
+                )}
+                onPress={() =>
+                  router.push({
+                    pathname: "/",
+                    params: {
+                      iden: row.id,
+                    },
+                  })
+                }
+              />
+            ))}
+        </DrawerContentScrollView>
         <DrawerItem
           label={() => (
-            <Text className="text-gray-500 font-semibold">New Chat</Text>
+            <View className="flex-row items-center justify-between">
+              <View className="flex-row w-full">
+                <Icons
+                  icon="user-circle-o"
+                  collection="FontAwesome"
+                  size={35}
+                />
+                <Text className="text-black font-semibold ml-3 text-lg">
+                  Settings
+                </Text>
+              </View>
+
+              <View>
+                <Icons icon="options" color={'gray'} collection="SimpleLineIcons" size={16} />
+              </View>
+            </View>
           )}
-          onPress={() =>
+          onPress={() => {
             router.push({
-              pathname: "/",
-            })
-          }
+              pathname: "(settings)",
+            });
+          }}
         />
-        <View>
-          <View className="border border-b-[1px] border-gray-200 mx-2 mb-2" />
-          <Text className="text-sm text-gray-500 ml-4">History</Text>
-        </View>
-        {rows.length > 0 &&
-          rows.map((row, index) => (
-            <DrawerItem
-              key={index}
-              label={() => (
-                <Text className="text-gray-500 font-semibold">{row.title}</Text>
-              )}
-              onPress={() =>
-                router.push({
-                  pathname: "/",
-                  params: {
-                    sms: row.messages,
-                    iden: row.id,
-                    title: row.title,
-                  },
-                })
-              }
-            />
-          ))}
-      </DrawerContentScrollView>
+      </>
     );
   }
 
@@ -163,6 +190,7 @@ export default function HomeLayout() {
                   drawerLabel: "Settings",
                   title: "Settings",
                   swipeEdgeWidth: 0,
+                  drawerItemStyle: { display: "none" },
                 }}
               />
               <Drawer.Screen
