@@ -50,7 +50,7 @@ const Settings = () => {
           <View className="mx-2 flex-1 items-center">
             <Text className="text-xl">Settings</Text>
           </View>
-          <View className="w-[10%]"/>
+          <View className="w-[10%]" />
         </View>
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
@@ -68,7 +68,7 @@ const Settings = () => {
                 text="Api Keys"
               />
             </View>
-            <View className="border-b-[1px] mx-[6px] border-gray-300"/>
+            <View className="border-b-[1px] mx-[6px] border-gray-300" />
             <View className="my-2 ml-[16px]">
               <View>
                 <Text className="text-xl font-bold">App</Text>
@@ -85,8 +85,14 @@ const Settings = () => {
                 iconName="vibration"
                 text="Haptic FeedBack"
               />
+              <PressableItem
+                href="(settings)/DataControls"
+                iconCollection="MaterialCommunityIcons"
+                iconName="database-outline"
+                text="Data Controls"
+              />
             </View>
-            <View className="border-b-[1px] mx-[6px] border-gray-300"/>
+            <View className="border-b-[1px] mx-[6px] border-gray-300" />
 
             <View className="my-2 ml-[16px]">
               <View>
