@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Platform } from "react-native";
+import { LogBox } from "react-native";
 import React, { useState } from "react";
 import {
   Menu,
@@ -10,17 +11,30 @@ import Icons from "../Icons/Icon";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useTheme } from "../../Context/ThemeContext";
+import {
+  DropdownMenuRoot,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuItem,
+  DropdownMenuItemTitle,
+  DropdownMenuLabel,
+  DropdownMenuIcon,
+} from "../Dropdowns/dropdown-menu";
 
 const HeaderTitle = () => {
   const { setOptionModel, enableSelect } = useTheme();
   const [selectedOption, setSelectedOption] = useState("GPT-3.5");
+  //This is not a solution, it is only added temporarily while we look for how to resolve the issue.
+  LogBox.ignoreLogs([
+    "React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: undefined.",
+  ]);
 
   const options = [
     {
       version: "3",
       title: "LLaMA-3",
       model: "meta-llama/Llama-3-8b-chat-hf",
-      iconName: "sparkles-outline",
+      iconName: "sparkles",
       collectionName: "Ionicons",
       api: "together",
       url: "https://api.together.xyz/v1/chat/completions",
@@ -29,7 +43,7 @@ const HeaderTitle = () => {
       version: "3.5",
       title: "ChatGPT 3.5",
       model: "gpt-3.5-turbo",
-      iconName: "flash-outline",
+      iconName: "bolt",
       collectionName: "Ionicons",
       api: "openai",
       url: "https://api.openai.com/v1/chat/completions",
@@ -38,7 +52,7 @@ const HeaderTitle = () => {
       version: "4",
       title: "ChatGPT 4",
       model: "gpt-4",
-      iconName: "sparkles-outline",
+      iconName: "sparkles",
       collectionName: "Ionicons",
       api: "openai",
       url: "https://api.openai.com/v1/chat/completions",
@@ -52,7 +66,7 @@ const HeaderTitle = () => {
 
   return (
     <View style={styles.menuContainer}>
-      <Menu>
+      {/* <Menu>
         <MenuTrigger disabled={enableSelect}>
           <View className="flex-row items-center">
             <Text className="text-[16px]">
@@ -115,7 +129,34 @@ const HeaderTitle = () => {
             </MenuOption>
           ))}
         </MenuOptions>
-      </Menu>
+      </Menu> */}
+      <DropdownMenuRoot>
+        <DropdownMenuTrigger>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text style={{ fontWeight: "500", fontSize: 16 }}>
+              {selectedOption || "Select action"}
+            </Text>
+          </View>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="center">
+          {options.map((option, index) => (
+            <DropdownMenuItem
+              disabled={enableSelect}
+              onSelect={() => handleSelect(option)}
+              textValue={option.title}
+              key={index}
+            >
+              <DropdownMenuItemTitle>{option.title}</DropdownMenuItemTitle>
+              <DropdownMenuIcon
+                ios={{
+                  name: option.icon,
+                  pointSize: 18,
+                }}
+              />
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenuRoot>
     </View>
   );
 };
