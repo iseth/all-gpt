@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
@@ -29,6 +30,7 @@ const Chat = () => {
     useTheme();
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
+  const [allowSend, setAllowSend] = useState(true);
   const [id, setId] = useState(null);
   const scrollViewRef = useRef();
   const db = useSQLiteContext();
@@ -62,8 +64,13 @@ const Chat = () => {
     };
     const storedApiKey = await AsyncStorage.getItem(optionModel.api);
     if (!storedApiKey) {
+      Alert.alert(
+        `You need to add api key to use the model ${optionModel.title}`,
+        `Go to settings to add the api key you must select the model ${optionModel.api}`
+      );
       return;
     }
+    setAllowSend(false);
     if (messages.length === 0) {
       const result = await db.runAsync(
         "INSERT INTO chat (title, messages) VALUES (?, ?)",
@@ -92,6 +99,7 @@ const Chat = () => {
         },
         url: optionModel.url,
       });
+      setAllowSend(true);
     } catch (error) {
       console.error("Streaming error:", error);
     }
@@ -172,7 +180,7 @@ const Chat = () => {
         </ScrollView>
         <View className={`flex-row my-2 items-center`}>
           <View className="ml-[16px]">
-            <ButtonAdd handleOptions={handleSend} />
+            <ButtonAdd handleOptions={()=> allowSend && handleSend()} />
           </View>
           <View className="flex-1 h-[45px]">
             <InputPrompt
@@ -183,7 +191,7 @@ const Chat = () => {
               iconName="mic"
               placeholder="Message"
               sizeIcon={25}
-              handleSend={handleSend}
+              handleSend={()=> allowSend && handleSend()}
             />
           </View>
         </View>

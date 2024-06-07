@@ -23,7 +23,7 @@ import {
 
 const HeaderTitle = () => {
   const { setOptionModel, enableSelect } = useTheme();
-  const [selectedOption, setSelectedOption] = useState("GPT-3.5");
+  const [selectedOption, setSelectedOption] = useState("ChatGPT-3.5");
   //This is not a solution, it is only added temporarily while we look for how to resolve the issue.
   LogBox.ignoreLogs([
     "React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: undefined.",

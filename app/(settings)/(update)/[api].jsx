@@ -48,11 +48,12 @@ const UpdateApi = () => {
             <Icons collection="Entypo" icon="chevron-left" size={20} />
           </TouchableOpacity>
           <View className="mx-2 flex-1 items-center">
-            <Text className="text-xl">{api}</Text>
+            <Text className="text-[17px] font-bold">{api}</Text>
           </View>
           <View className="w-[10%]" />
         </View>
-        <View>
+        <View className="border-b-[1px] mx-[16px] mt-[21px] border-gray-300" />
+        <View className="mt-[35px]">
           <View>
             <View
               className={`flex-row bg-gray-300 rounded-[5px] mx-[16px] mt-5`}

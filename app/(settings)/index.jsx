@@ -20,14 +20,20 @@ const Settings = () => {
     }
   };
   // Create a function component for a Pressable Item
-  const PressableItem = ({ href, iconCollection, iconName, text }) => {
+  const PressableItem = ({
+    href,
+    iconCollection,
+    iconName,
+    text,
+    last = 20,
+  }) => {
     const [isPressed, setIsPressed] = useState(false);
 
     return (
       <Link href={href} asChild>
         <Pressable
-          className={`flex-row my-2 py-2 rounded-lg ${
-            isPressed ? "bg-gray-300" : ""
+          className={`flex-row mb-[${last}px] py-2 rounded-lg ${
+            isPressed ? "bg-gray-300 pl-[9px] mx-[7px]" : "mx-[16px]"
           }`}
           onPressIn={() => setIsPressed(true)}
           onPressOut={() => setIsPressed(false)}
@@ -35,7 +41,7 @@ const Settings = () => {
           <View className="mr-2">
             <Icons collection={iconCollection} icon={iconName} size={20} />
           </View>
-          <Text>{text}</Text>
+          <Text className="text-[17px] font-normal">{text}</Text>
         </Pressable>
       </Link>
     );
@@ -48,30 +54,32 @@ const Settings = () => {
             <Icons collection="Entypo" icon="chevron-left" size={20} />
           </TouchableOpacity>
           <View className="mx-2 flex-1 items-center">
-            <Text className="text-xl">Settings</Text>
+            <Text className="text-[17px] font-bold">Settings</Text>
           </View>
           <View className="w-[10%]" />
         </View>
+        <View className="border-b-[1px] mx-[15px] mt-[15px] border-gray-300" />
         <ScrollView
           contentInsetAdjustmentBehavior="automatic"
           contentContainerStyle={{ paddingBottom: 40 }}
         >
-          <View className="mt-[20px]">
-            <View className="my-2 ml-[16px]">
-              <View>
-                <Text className="text-xl font-bold">Models</Text>
+          <View className="mt-[37px]">
+            <View>
+              <View className="ml-[16px] mb-[18px]">
+                <Text className="text-[15px] font-bold">Models</Text>
               </View>
               <PressableItem
                 href="(settings)/api-keys"
                 iconCollection="MaterialIcons"
                 iconName="key"
                 text="Api Keys"
+                last={0}
               />
             </View>
-            <View className="border-b-[1px] mx-[6px] border-gray-300" />
-            <View className="my-2 ml-[16px]">
-              <View>
-                <Text className="text-xl font-bold">App</Text>
+            <View className="border-b-[1px] ml-[6px] mr-[7px] my-[22px] border-gray-300" />
+            <View>
+              <View className="ml-[16px] mb-[18px]">
+                <Text className="text-[15px] font-bold">App</Text>
               </View>
               <PressableItem
                 href="(settings)/api-keys"
@@ -90,13 +98,14 @@ const Settings = () => {
                 iconCollection="MaterialCommunityIcons"
                 iconName="database-outline"
                 text="Data Controls"
+                last={0}
               />
             </View>
-            <View className="border-b-[1px] mx-[6px] border-gray-300" />
+            <View className="border-b-[1px] ml-[6px] mr-[7px] my-[22px] border-gray-300" />
 
-            <View className="my-2 ml-[16px]">
-              <View>
-                <Text className="text-xl font-bold">About</Text>
+            <View>
+              <View className="ml-[16px] mb-[18px]">
+                <Text className="text-[15px] font-bold">About</Text>
               </View>
               <PressableItem
                 href="(settings)/api-keys"
@@ -109,11 +118,12 @@ const Settings = () => {
                 iconCollection="SimpleLineIcons"
                 iconName="lock"
                 text="Privacy Policy"
+                last={0}
               />
             </View>
           </View>
         </ScrollView>
-        <View className="my-2 ml-[16px]">
+        <View className="my-2">
           <View className="flex-row items-center justify-center">
             <View>
               <Icons icon={"circle"} collection={"Entypo"} />

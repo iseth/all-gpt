@@ -21,9 +21,10 @@ export const ThemeProvider = ({ children }) => {
     version: "3.5",
     title: "ChatGPT 3.5",
     model: "gpt-3.5-turbo",
-    iconName: "flash-outline",
+    iconName: "bolt",
     collectionName: "Ionicons",
     api: "openai",
+    url: "https://api.openai.com/v1/chat/completions",
   });
 
   return (
