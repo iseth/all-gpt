@@ -1,5 +1,5 @@
 import { Link, Stack, useRouter } from "expo-router";
-import { Platform, Text, View } from "react-native";
+import { LayoutAnimation, Platform, Text, View } from "react-native";
 import { MenuProvider } from "react-native-popup-menu";
 import { ThemeProvider, useTheme } from "../Context/ThemeContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -15,6 +15,7 @@ import {
 } from "@react-navigation/drawer";
 import { useEffect, useState } from "react";
 import Icons from "../Components/Icons/Icon";
+import SwipeRow from "../Components/Swipe/SwipeRow";
 
 export default function HomeLayout() {
   if (Platform.OS !== "web") {
@@ -41,10 +42,12 @@ export default function HomeLayout() {
   function CustomDrawerContent(props) {
     const { setLoadData, loadData, setRefresh } = useTheme();
     const [rows, setRows] = useState([]);
+    const [idCurrent, setIdCurrent] = useState(null);
     const router = useRouter();
     const db = useSQLiteContext();
     const getAllChats = async () => {
       const allRows = await db.getAllAsync("SELECT * FROM chat");
+      console.log(allRows, "allrows");
       setRows(allRows);
     };
 
@@ -58,6 +61,19 @@ export default function HomeLayout() {
         setLoadData(false);
       }
     }, [loadData]);
+    const deleteItem = async (id) => {
+      await db.runAsync(`DELETE FROM chat WHERE id =${id}`);
+      const updateData = rows.filter((d) => d.id !== id);
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+      setRows(updateData);
+      if (id === idCurrent) {
+        setRefresh(true);
+        router.push({
+          pathname: "/",
+        });
+        setIdCurrent(null);
+      }
+    };
 
     return (
       <>
@@ -80,20 +96,25 @@ export default function HomeLayout() {
           </View>
           {rows.length > 0 &&
             rows.map((row, index) => (
-              <DrawerItem
-                key={index}
-                label={() => (
-                  <Text className="text-black font-semibold">{row.title}</Text>
-                )}
-                onPress={() =>
-                  router.push({
-                    pathname: "/",
-                    params: {
-                      iden: row.id,
-                    },
-                  })
-                }
-              />
+              <SwipeRow key={row.id} onDelete={() => deleteItem(row.id)}>
+                <DrawerItem
+                  key={row.id}
+                  label={() => (
+                    <Text className="text-black font-semibold">
+                      {row.title}
+                    </Text>
+                  )}
+                  onPress={() => {
+                    setIdCurrent(row.id);
+                    router.push({
+                      pathname: "/",
+                      params: {
+                        iden: row.id,
+                      },
+                    });
+                  }}
+                />
+              </SwipeRow>
             ))}
         </DrawerContentScrollView>
         <DrawerItem
@@ -111,7 +132,12 @@ export default function HomeLayout() {
               </View>
 
               <View>
-                <Icons icon="options" color={'gray'} collection="SimpleLineIcons" size={16} />
+                <Icons
+                  icon="options"
+                  color={"gray"}
+                  collection="SimpleLineIcons"
+                  size={16}
+                />
               </View>
             </View>
           )}

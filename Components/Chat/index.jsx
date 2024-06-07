@@ -28,7 +28,7 @@ const Messages = ({ messages, scrollViewRef }) => {
               </View>
             </View>
           ) : (
-            <View key={index} className="flex-row flex-1">
+            <View key={index} className="flex-row">
               {messages[index - 1].role === "user" ? (
                 <View className="w-[10%]">
                   <Icons
@@ -40,7 +40,7 @@ const Messages = ({ messages, scrollViewRef }) => {
               ) : (
                 <View className="w-[10%]" />
               )}
-              <Text key={index} className={`text-base text-black`}>
+              <Text key={index} className={`text-base text-black flex-wrap`}>
                 {message.content}
               </Text>
             </View>
