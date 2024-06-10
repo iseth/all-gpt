@@ -19,10 +19,11 @@ import InputPrompt from "../Components/Inputs/InputPrompt";
 import ButtonAdd from "../Components/Buttons/ButtonAdd";
 import { useSQLiteContext } from "expo-sqlite";
 
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 
 import { Messages } from "../Components/Chat";
 import { streamChatTogether } from "../Services/togetherAi/ChatTogether";
+import AnimatedIntro from "../Components/Animations/AnimatedIntro";
 
 const Chat = () => {
   const { iden } = useLocalSearchParams();
@@ -31,6 +32,7 @@ const Chat = () => {
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const [allowSend, setAllowSend] = useState(true);
+  const [timeComplete, setTimeComplete] = useState(false);
   const [id, setId] = useState(null);
   const scrollViewRef = useRef();
   const db = useSQLiteContext();
@@ -42,6 +44,10 @@ const Chat = () => {
       description: "tell me the numbers from 1 to 10",
     },
   ];
+  const navigation = useNavigation();
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
   useEffect(() => {
     const keyExists = AsyncStorage.getItem("openai");
     if (!keyExists) {
@@ -116,6 +122,10 @@ const Chat = () => {
 
   useEffect(() => {
     setEnableSelect(false);
+    setTimeout(() => {
+      setTimeComplete(true);
+      navigation.setOptions({ headerShown: true });
+    }, 20000);
   }, []);
 
   const updateData = async () => {
@@ -145,58 +155,67 @@ const Chat = () => {
   }, [iden]);
 
   return (
-    <SafeAreaView className={`flex-1 bg-white`}>
-      <StatusBar barStyle="dark-content" />
-      <View className={`py-2.5 px-4 items-center`} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        className={`flex-1`}
-        keyboardVerticalOffset={110}
-      >
-        <View className="h-10 items-start justify-center">
-          {/* <Link href="/settings" asChild>
-            <TouchableOpacity className="ml-2">
-              <Text className="text-5xl">Settings</Text>
-            </TouchableOpacity>
-          </Link> */}
-          {/* <Link href="/Settings" asChild> */}
-          {/*   <TouchableOpacity className="ml-2"> */}
-          {/*     <Icons icon="settings" size={30} collection="Ionicons" /> */}
-          {/*   </TouchableOpacity> */}
-          {/* </Link> */}
-        </View>
+    <>
+      {timeComplete ? (
+        <SafeAreaView className={`flex-1 bg-white`}>
+          <StatusBar barStyle="dark-content" />
+          <View className={`py-2.5 px-4 items-center`} />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            className={`flex-1`}
+            keyboardVerticalOffset={110}
+          >
+            <View className="h-10 items-start justify-center">
+              {/* <Link href="/settings" asChild>
+           <TouchableOpacity className="ml-2">
+             <Text className="text-5xl">Settings</Text>
+           </TouchableOpacity>
+         </Link> */}
+              {/* <Link href="/Settings" asChild> */}
+              {/*   <TouchableOpacity className="ml-2"> */}
+              {/*     <Icons icon="settings" size={30} collection="Ionicons" /> */}
+              {/*   </TouchableOpacity> */}
+              {/* </Link> */}
+            </View>
 
-        <Messages messages={messages} scrollViewRef={scrollViewRef} />
+            <Messages messages={messages} scrollViewRef={scrollViewRef} />
 
-        <ScrollView className="h-0 max-h-[100px] py-2 mx-1" horizontal={true}>
-          {data.map((card, index) => (
-            <CardRecomended
-              key={index}
-              title={card.title}
-              description={card.description}
-              setInputText={setInputText}
-            />
-          ))}
-        </ScrollView>
-        <View className={`flex-row my-2 items-center`}>
-          <View className="ml-[16px]">
-            <ButtonAdd handleOptions={()=> allowSend && handleSend()} />
-          </View>
-          <View className="flex-1 h-[45px]">
-            <InputPrompt
-              inputText={inputText}
-              setInputText={setInputText}
-              collectionIcon="MaterialIcons"
-              colorIcon="#6B7280"
-              iconName="mic"
-              placeholder="Message"
-              sizeIcon={25}
-              handleSend={()=> allowSend && handleSend()}
-            />
-          </View>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            <ScrollView
+              className="h-0 max-h-[100px] py-2 mx-1"
+              horizontal={true}
+            >
+              {data.map((card, index) => (
+                <CardRecomended
+                  key={index}
+                  title={card.title}
+                  description={card.description}
+                  setInputText={setInputText}
+                />
+              ))}
+            </ScrollView>
+            <View className={`flex-row my-2 items-center`}>
+              <View className="ml-[16px]">
+                <ButtonAdd handleOptions={() => allowSend && handleSend()} />
+              </View>
+              <View className="flex-1 h-[45px]">
+                <InputPrompt
+                  inputText={inputText}
+                  setInputText={setInputText}
+                  collectionIcon="MaterialIcons"
+                  colorIcon="#6B7280"
+                  iconName="mic"
+                  placeholder="Message"
+                  sizeIcon={25}
+                  handleSend={() => allowSend && handleSend()}
+                />
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+        </SafeAreaView>
+      ) : (
+        <AnimatedIntro />
+      )}
+    </>
   );
 };
 

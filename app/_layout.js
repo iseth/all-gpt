@@ -47,7 +47,6 @@ export default function HomeLayout() {
     const db = useSQLiteContext();
     const getAllChats = async () => {
       const allRows = await db.getAllAsync("SELECT * FROM chat");
-      console.log(allRows, "allrows");
       setRows(allRows);
     };
 
