@@ -40,7 +40,7 @@ export default function HomeLayout() {
   }
 
   function CustomDrawerContent(props) {
-    const { setLoadData, loadData, setRefresh } = useTheme();
+    const { setLoadData, loadData, setRefresh, setOptionModel } = useTheme();
     const [rows, setRows] = useState([]);
     const [idCurrent, setIdCurrent] = useState(null);
     const router = useRouter();
@@ -83,6 +83,15 @@ export default function HomeLayout() {
               <Text className="text-gray-500 font-semibold">New Chat</Text>
             )}
             onPress={() => {
+              setOptionModel({
+                version: "3.5",
+                title: "ChatGPT 3.5",
+                model: "gpt-3.5-turbo",
+                iconName: "bolt",
+                collectionName: "Ionicons",
+                api: "openai",
+                url: "https://api.openai.com/v1/chat/completions",
+              });
               setRefresh(true);
               router.push({
                 pathname: "/",
@@ -104,6 +113,7 @@ export default function HomeLayout() {
                     </Text>
                   )}
                   onPress={() => {
+                    setOptionModel(JSON.parse(row.current_model));
                     setIdCurrent(row.id);
                     router.push({
                       pathname: "/",

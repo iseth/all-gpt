@@ -22,8 +22,7 @@ import {
 } from "../Dropdowns/dropdown-menu";
 
 const HeaderTitle = () => {
-  const { setOptionModel, enableSelect } = useTheme();
-  const [selectedOption, setSelectedOption] = useState("ChatGPT-3.5");
+  const { setOptionModel, enableSelect, optionModel } = useTheme();
   //This is not a solution, it is only added temporarily while we look for how to resolve the issue.
   LogBox.ignoreLogs([
     "React.jsx: type is invalid -- expected a string (for built-in components) or a class/function (for composite components) but got: undefined.",
@@ -60,7 +59,6 @@ const HeaderTitle = () => {
   ];
 
   const handleSelect = async (option) => {
-    setSelectedOption(option.title);
     setOptionModel(option);
   };
 
@@ -134,7 +132,7 @@ const HeaderTitle = () => {
         <DropdownMenuTrigger>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={{ fontWeight: "500", fontSize: 16 }}>
-              {selectedOption || "Select action"}
+              {optionModel.title || "Select action"}
             </Text>
           </View>
         </DropdownMenuTrigger>

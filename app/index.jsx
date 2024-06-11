@@ -79,9 +79,10 @@ const Chat = () => {
     setAllowSend(false);
     if (messages.length === 0) {
       const result = await db.runAsync(
-        "INSERT INTO chat (title, messages) VALUES (?, ?)",
+        "INSERT INTO chat (title, messages,current_model) VALUES (?, ?, ?)",
         `${inputText.trim()}`,
-        `${JSON.stringify(messages)}`
+        `${JSON.stringify(messages)}`,
+        `${JSON.stringify(optionModel)}`
       );
       setId(result.lastInsertRowId);
       setLoadData(true);
@@ -101,7 +102,25 @@ const Chat = () => {
         messages: [{ role: "user", content: inputText }],
         config,
         onChunk: (chunk) => {
-          setMessages((prev) => [...prev, { role: "AI", content: chunk }]);
+          // Suponiendo que chunk es un string que representa un fragmento del mensaje
+          if (chunk !== "data: [DONE]") {
+            setMessages((prev) => {
+              // Encuentra el último mensaje si es de rol "AI" para agregarle el nuevo chunk
+              const lastMessageIndex = prev.length - 1;
+              if (prev[lastMessageIndex]?.role === "AI") {
+                // Agregar el chunk al último mensaje
+                const updatedMessage = {
+                  ...prev[lastMessageIndex],
+                  content: prev[lastMessageIndex].content + chunk,
+                };
+                // Actualizar el array de mensajes
+                return [...prev.slice(0, lastMessageIndex), updatedMessage];
+              } else {
+                // Si el último mensaje no es de "AI", agrega un nuevo mensaje
+                return [...prev, { role: "AI", content: chunk }];
+              }
+            });
+          }
         },
         url: optionModel.url,
       });

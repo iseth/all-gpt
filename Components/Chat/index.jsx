@@ -40,7 +40,7 @@ const Messages = ({ messages, scrollViewRef }) => {
               ) : (
                 <View className="w-[10%]" />
               )}
-              <Text key={index} className={`text-base text-black flex-wrap`}>
+              <Text key={index} className={`text-base text-black flex-1`}>
                 {message.content}
               </Text>
             </View>

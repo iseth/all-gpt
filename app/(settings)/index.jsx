@@ -9,13 +9,25 @@ import { defaultStyles } from "../../constants/Styles";
 import Icons from "../../Components/Icons/Icon";
 import { useState } from "react";
 import { PanGestureHandler } from "react-native-gesture-handler";
+import { useTheme } from "../../Context/ThemeContext";
 
 const Settings = () => {
+  const { setOptionModel } = useTheme();
+
   const navigation = useNavigation();
   const router = useRouter();
 
   const handleGesture = (event) => {
     if (event.nativeEvent.translationX > 50) {
+      setOptionModel({
+        version: "3.5",
+        title: "ChatGPT 3.5",
+        model: "gpt-3.5-turbo",
+        iconName: "bolt",
+        collectionName: "Ionicons",
+        api: "openai",
+        url: "https://api.openai.com/v1/chat/completions",
+      });
       router.navigate("/");
     }
   };

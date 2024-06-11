@@ -58,15 +58,24 @@ async function readChunks(response, onChunk) {
 function parseChunkData(value) {
   const textDecoder = new TextDecoder("utf-8");
   const chunkData = textDecoder.decode(value);
-
+  // console.log(chunkData, "chunkdata");
   const items = chunkData
     .split("\n")
     .map((str) => str.trim())
-    .filter((str) => str.startsWith("data: {")) // Only keep lines that appear to contain valid JSON
+    .filter((str) => str.startsWith("data:")) // Only keep lines that appear to contain valid JSON
     .map((str) => {
       try {
+        if (str.startsWith("data: {")) {
+         try {
+            return JSON.parse(str.substring(6));
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          return str;
+        }
         // Remove the "data: " prefix and then parse the JSON
-        return JSON.parse(str.substring(6));
+        // console.log(JSON.parse(str.substring(6)), "valoooooor");
       } catch (e) {
         console.error("Error parsing JSON:", e);
         return null; // Return null if there is a parsing error

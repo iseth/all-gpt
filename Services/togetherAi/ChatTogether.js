@@ -10,7 +10,6 @@ export async function streamChatTogether(args) {
   if (!apiKey) {
     throw new Error("API key not found. Please set your OpenAI API key.");
   }
-  console.log(apiKey);
   const commonHeaders = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${apiKey}`,
@@ -61,11 +60,19 @@ function parseChunkData(value) {
   const items = chunkData
     .split("\n")
     .map((str) => str.trim())
-    .filter((str) => str.startsWith("data: {")) // Only keep lines that appear to contain valid JSON
+    .filter((str) => str.startsWith("data:")) // Only keep lines that appear to contain valid JSON
     .map((str) => {
       try {
         // Remove the "data: " prefix and then parse the JSON
-        return JSON.parse(str.substring(6));
+        if (str.startsWith("data: {")) {
+          try {
+            return JSON.parse(str.substring(6));
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          return str;
+        }
       } catch (e) {
         console.error("Error parsing JSON:", e);
         return null; // Return null if there is a parsing error
