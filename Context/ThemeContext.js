@@ -9,6 +9,8 @@ const ThemeContext = createContext({
   setOptionModel: () => {},
   enableSelect: false,
   setEnableSelect: () => {},
+  idCurrent: null,
+  setIdCurrent: () => {},
 });
 
 export const useTheme = () => useContext(ThemeContext);
@@ -17,6 +19,7 @@ export const ThemeProvider = ({ children }) => {
   const [refresh, setRefresh] = useState(false);
   const [loadData, setLoadData] = useState(false);
   const [enableSelect, setEnableSelect] = useState(false);
+  const [idCurrent, setIdCurrent] = useState(null);
   const [optionModel, setOptionModel] = useState({
     version: "3.5",
     title: "ChatGPT 3.5",
@@ -38,6 +41,8 @@ export const ThemeProvider = ({ children }) => {
         setOptionModel,
         enableSelect,
         setEnableSelect,
+        idCurrent,
+        setIdCurrent,
       }}
     >
       {children}

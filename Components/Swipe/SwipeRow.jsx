@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Animated, View, Text, StyleSheet } from "react-native";
+import { Animated } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 
 const SwipeToDelete = ({ children, onDelete }) => {
@@ -13,10 +13,9 @@ const SwipeToDelete = ({ children, onDelete }) => {
 
   const onHandlerStateChange = ({ nativeEvent }) => {
     if (nativeEvent.state === 5) {
-      // 5 significa que el gesto terminó
       if (nativeEvent.translationX < -100) {
         Animated.timing(translateX, {
-          toValue: -500, // Valor arbitrario para mover el elemento fuera de la pantalla
+          toValue: -500,
           duration: 200,
           useNativeDriver: true,
         }).start(() => onDelete());

@@ -55,7 +55,4 @@ const Messages = ({ messages, scrollViewRef }) => {
   );
 };
 
-const CardRecomended = ({ title, description, setInputText }) => {};
-
 export { Messages };
-[{}, {}, {}];

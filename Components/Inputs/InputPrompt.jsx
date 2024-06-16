@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Platform, Pressable } from "react-native";
+import { View, TextInput, Platform, Pressable } from "react-native";
 import React from "react";
 
 import Icons from "../Icons/Icon";

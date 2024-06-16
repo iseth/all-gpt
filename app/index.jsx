@@ -1,18 +1,15 @@
 import {
   View,
-  Text,
   ScrollView,
   SafeAreaView,
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  TouchableOpacity,
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
 import { streamChatOpenAI } from "../Services/openAI/ChatGPT";
-import Icons from "../Components/Icons/Icon";
 import CardRecomended from "../Components/Generic/CardRecomended";
 import { useTheme } from "../Context/ThemeContext";
 import InputPrompt from "../Components/Inputs/InputPrompt";
@@ -27,12 +24,18 @@ import AnimatedIntro from "../Components/Animations/AnimatedIntro";
 
 const Chat = () => {
   const { iden } = useLocalSearchParams();
-  const { refresh, setRefresh, setLoadData, optionModel, setEnableSelect } =
-    useTheme();
+  const {
+    refresh,
+    setRefresh,
+    setLoadData,
+    optionModel,
+    setEnableSelect,
+    setIdCurrent,
+  } = useTheme();
   const [inputText, setInputText] = useState("");
   const [messages, setMessages] = useState([]);
   const [allowSend, setAllowSend] = useState(true);
-  const [timeComplete, setTimeComplete] = useState(false);
+  const [timeComplete, setTimeComplete] = useState(null);
   const [id, setId] = useState(null);
   const scrollViewRef = useRef();
   const db = useSQLiteContext();
@@ -85,6 +88,7 @@ const Chat = () => {
         `${JSON.stringify(optionModel)}`
       );
       setId(result.lastInsertRowId);
+      setIdCurrent(result.lastInsertRowId);
       setLoadData(true);
     }
     setMessages((prev) => [
@@ -136,11 +140,23 @@ const Chat = () => {
 
   useEffect(() => {
     setEnableSelect(false);
-    setTimeout(() => {
+    initial();
+  }, []);
+
+  const initial = async () => {
+    const initial = await AsyncStorage.getItem("initial");
+    if (!initial) {
+      setTimeComplete(false);
+      setTimeout(() => {
+        setTimeComplete(true);
+        AsyncStorage.setItem("initial", "true");
+        navigation.setOptions({ headerShown: true });
+      }, 2000);
+    } else {
       setTimeComplete(true);
       navigation.setOptions({ headerShown: true });
-    }, 20000);
-  }, []);
+    }
+  };
 
   const updateData = async () => {
     try {
@@ -179,33 +195,22 @@ const Chat = () => {
             className={`flex-1`}
             keyboardVerticalOffset={110}
           >
-            <View className="h-10 items-start justify-center">
-              {/* <Link href="/settings" asChild>
-           <TouchableOpacity className="ml-2">
-             <Text className="text-5xl">Settings</Text>
-           </TouchableOpacity>
-         </Link> */}
-              {/* <Link href="/Settings" asChild> */}
-              {/*   <TouchableOpacity className="ml-2"> */}
-              {/*     <Icons icon="settings" size={30} collection="Ionicons" /> */}
-              {/*   </TouchableOpacity> */}
-              {/* </Link> */}
-            </View>
-
             <Messages messages={messages} scrollViewRef={scrollViewRef} />
 
             <ScrollView
               className="h-0 max-h-[100px] py-2 mx-1"
               horizontal={true}
             >
-              {data.map((card, index) => (
-                <CardRecomended
-                  key={index}
-                  title={card.title}
-                  description={card.description}
-                  setInputText={setInputText}
-                />
-              ))}
+              {messages.length === 0 &&
+                inputText.length === 0 &&
+                data.map((card, index) => (
+                  <CardRecomended
+                    key={index}
+                    title={card.title}
+                    description={card.description}
+                    setInputText={setInputText}
+                  />
+                ))}
             </ScrollView>
             <View className={`flex-row my-2 items-center`}>
               <View className="ml-[16px]">
@@ -226,9 +231,9 @@ const Chat = () => {
             </View>
           </KeyboardAvoidingView>
         </SafeAreaView>
-      ) : (
+      ) : !timeComplete && timeComplete !== null ? (
         <AnimatedIntro />
-      )}
+      ) : null}
     </>
   );
 };

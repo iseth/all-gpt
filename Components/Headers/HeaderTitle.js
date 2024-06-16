@@ -16,9 +16,8 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
-  DropdownMenuItemTitle,
-  DropdownMenuLabel,
   DropdownMenuIcon,
+  DropdownMenuTitle,
 } from "../Dropdowns/dropdown-menu";
 
 const HeaderTitle = () => {
@@ -144,7 +143,7 @@ const HeaderTitle = () => {
               textValue={option.title}
               key={index}
             >
-              <DropdownMenuItemTitle>{option.title}</DropdownMenuItemTitle>
+              <DropdownMenuTitle>{option.title}</DropdownMenuTitle>
               <DropdownMenuIcon
                 ios={{
                   name: option.icon,

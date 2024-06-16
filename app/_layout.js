@@ -1,13 +1,11 @@
-import { Link, Stack, useRouter } from "expo-router";
-import { LayoutAnimation, Platform, Text, View } from "react-native";
-import { MenuProvider } from "react-native-popup-menu";
+import { useRouter } from "expo-router";
+import { LayoutAnimation, Platform, Pressable, Text, View } from "react-native";
 import { ThemeProvider, useTheme } from "../Context/ThemeContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 
 import HeaderTitle from "../Components/Headers/HeaderTitle";
-import HeaderRight from "../Components/Headers/HeaderRight";
 import {
   DrawerContentScrollView,
   DrawerItem,
@@ -40,9 +38,15 @@ export default function HomeLayout() {
   }
 
   function CustomDrawerContent(props) {
-    const { setLoadData, loadData, setRefresh, setOptionModel } = useTheme();
+    const {
+      setLoadData,
+      loadData,
+      setRefresh,
+      setOptionModel,
+      idCurrent,
+      setIdCurrent,
+    } = useTheme();
     const [rows, setRows] = useState([]);
-    const [idCurrent, setIdCurrent] = useState(null);
     const router = useRouter();
     const db = useSQLiteContext();
     const getAllChats = async () => {
@@ -167,78 +171,36 @@ export default function HomeLayout() {
         assetId: require("../assets/database/all-gpt-database.db"),
       }}
     >
-      <MenuProvider>
-        <ThemeProvider>
-          {/* <Stack>
-            <Stack.Screen
+      <ThemeProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Drawer drawerContent={(props) => <CustomDrawerContent {...props} />}>
+            <Drawer.Screen
+              initialParams={{ title: "Home" }}
               name="index"
               options={{
+                drawerLabel: "Home",
+                headerTitleAlign: "center",
+                drawerItemStyle: { display: "none" },
+                headerTitle: () => (
+                  <View className="justify-center">
+                    <HeaderTitle />
+                  </View>
+                ),
+              }}
+            />
+            <Drawer.Screen
+              name="(settings)"
+              options={{
                 headerShown: false,
+                drawerLabel: "Settings",
+                title: "Settings",
+                swipeEdgeWidth: 0,
+                drawerItemStyle: { display: "none" },
               }}
             />
-            <Stack.Screen
-              name="settings/index"
-              title="Settings"
-              options={{
-                animation: "slide_from_left",
-                headerTitle: "Settings",
-                headerShown: true,
-              }}
-            />
-            <Stack.Screen
-              name="settings/api-keys"
-              options={{
-                presentation: "card",
-                title: "Api Keys",
-              }}
-            />
-            <Stack.Screen
-              name="settings/update/[api]"
-              options={({ route }) => ({
-                presentation: "card",
-                headerTitle: route.params.api,
-              })}
-            />
-          </Stack> */}
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <Drawer
-              drawerContent={(props) => <CustomDrawerContent {...props} />}
-            >
-              <Drawer.Screen
-                initialParams={{ title: "Home" }}
-                name="index"
-                options={{
-                  drawerLabel: "Home",
-                  headerTitleAlign: "center",
-                  drawerItemStyle: { display: "none" },
-                  headerTitle: () => (
-                    <View className="justify-center">
-                      <HeaderTitle />
-                    </View>
-                  ),
-                }}
-              />
-              <Drawer.Screen
-                name="(settings)"
-                options={{
-                  headerShown: false,
-                  drawerLabel: "Settings",
-                  title: "Settings",
-                  swipeEdgeWidth: 0,
-                  drawerItemStyle: { display: "none" },
-                }}
-              />
-              <Drawer.Screen
-                name="Settings-old"
-                options={{
-                  headerShown: false,
-                  drawerItemStyle: { display: "none" },
-                }}
-              />
-            </Drawer>
-          </GestureHandlerRootView>
-        </ThemeProvider>
-      </MenuProvider>
+          </Drawer>
+        </GestureHandlerRootView>
+      </ThemeProvider>
     </SQLiteProvider>
   );
 }
