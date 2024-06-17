@@ -1,14 +1,6 @@
 import { View, Text, StyleSheet, Platform } from "react-native";
 import { LogBox } from "react-native";
-import React, { useState } from "react";
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from "react-native-popup-menu";
-import Icons from "../Icons/Icon";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import React from "react";
 
 import { useTheme } from "../../Context/ThemeContext";
 import {
@@ -63,70 +55,6 @@ const HeaderTitle = () => {
 
   return (
     <View style={styles.menuContainer}>
-      {/* <Menu>
-        <MenuTrigger disabled={enableSelect}>
-          <View className="flex-row items-center">
-            <Text className="text-[16px]">
-              {selectedOption || "Select action"}
-            </Text>
-            <Icons collection="Entypo" icon="chevron-right" size={20} />
-          </View>
-        </MenuTrigger>
-        <MenuOptions optionsContainerStyle={styles.menuOptions}>
-          {options.map((option, index) => (
-            <MenuOption
-              key={option.version}
-              onSelect={() => handleSelect(option)}
-              style={{
-                paddingHorizontal: 10,
-                ...(Platform.OS === "ios"
-                  ? {
-                      borderBottomWidth: index % 2 === 0 ? 0 : 1,
-                      borderTopWidth: index % 2 === 0 ? 0 : 1,
-                      borderColor: "#D1D5DB",
-                    }
-                  : {}),
-              }}
-            >
-              <View className="flex-row justify-between">
-                <View className="flex-row w-[90%]">
-                  {Platform.OS === "ios" ? (
-                    <View className="w-[10%]">
-                      {selectedOption === option.title && (
-                        <Icons collection={"Entypo"} icon={"check"} size={20} />
-                      )}
-                    </View>
-                  ) : (
-                    <Icons
-                      collection={option.collectionName}
-                      icon={option.iconName.replace("-outline", "")}
-                      size={20}
-                      color={"#4B5563"}
-                    />
-                  )}
-                  <View className="w-[95%] mx-2">
-                    <Text className="text-[16px]">{option.title}</Text>
-                  </View>
-                </View>
-                {Platform.OS === "android" ? (
-                  <View className="w-[10%]">
-                    {selectedOption === option.title && (
-                      <Icons collection={"Entypo"} icon={"check"} size={20} />
-                    )}
-                  </View>
-                ) : (
-                  <Icons
-                    collection={option.collectionName}
-                    icon={option.iconName.replace("-outline", "")}
-                    size={20}
-                    color={"#4B5563"}
-                  />
-                )}
-              </View>
-            </MenuOption>
-          ))}
-        </MenuOptions>
-      </Menu> */}
       <DropdownMenuRoot>
         <DropdownMenuTrigger>
           <View style={{ flexDirection: "row", alignItems: "center" }}>

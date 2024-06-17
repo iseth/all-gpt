@@ -1,5 +1,5 @@
 /* eslint-disable radix */
-import React, { useContext } from "react";
+import React from "react";
 
 // Libraries
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -15,7 +15,6 @@ import Entypo from "@expo/vector-icons/Entypo";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function Icons({ collection, icon, color, size = 12 }) {
-  // Extract values from context
   const colorDefault = "black";
   switch (collection) {
     case "AntDesign":

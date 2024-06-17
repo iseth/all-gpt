@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import React from "react";
 import { PanGestureHandler } from "react-native-gesture-handler";
 import { useNavigation, useRouter } from "expo-router";

@@ -1,11 +1,10 @@
-import { Link, router, useNavigation } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import { FlatList, Pressable, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text, ScrollView } from "react-native";
 import { PanGestureHandler } from "react-native-gesture-handler";
 
 import Colors from "../../constants/Colors";
-import { defaultStyles } from "../../constants/Styles";
 import Icons from "../../Components/Icons/Icon";
 import { useState } from "react";
 

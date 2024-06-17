@@ -96,7 +96,6 @@ const Chat = () => {
       { role: "user", content: inputText.trim() },
     ]);
 
-    // const model = await AsyncStorage.getItem("ModelOpenai");
     const config = {
       model: optionModel ? optionModel.model : "gpt-3.5-turbo",
       max_tokens: 200,

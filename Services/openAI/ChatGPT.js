@@ -58,7 +58,6 @@ async function readChunks(response, onChunk) {
 function parseChunkData(value) {
   const textDecoder = new TextDecoder("utf-8");
   const chunkData = textDecoder.decode(value);
-  // console.log(chunkData, "chunkdata");
   const items = chunkData
     .split("\n")
     .map((str) => str.trim())
@@ -74,8 +73,6 @@ function parseChunkData(value) {
         } else {
           return str;
         }
-        // Remove the "data: " prefix and then parse the JSON
-        // console.log(JSON.parse(str.substring(6)), "valoooooor");
       } catch (e) {
         console.error("Error parsing JSON:", e);
         return null; // Return null if there is a parsing error

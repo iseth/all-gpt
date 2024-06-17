@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { LayoutAnimation, Platform, Pressable, Text, View } from "react-native";
+import { LayoutAnimation, Platform, Text, View } from "react-native";
 import { ThemeProvider, useTheme } from "../Context/ThemeContext";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
@@ -107,7 +107,7 @@ export default function HomeLayout() {
             <Text className="text-sm text-gray-500 ml-4">History</Text>
           </View>
           {rows.length > 0 &&
-            rows.map((row, index) => (
+            rows.map((row) => (
               <SwipeRow key={row.id} onDelete={() => deleteItem(row.id)}>
                 <DrawerItem
                   key={row.id}

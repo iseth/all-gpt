@@ -1,5 +1,5 @@
 import React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import Icons from "../Icons/Icon";
 
