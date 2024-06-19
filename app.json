@@ -31,7 +31,16 @@
     },
     "plugins": [
       "expo-router",
-      "expo-build-properties"
+      "expo-build-properties",
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "note": "AUTH_TOKEN",
+          "project": "projectname",
+          "organization": "organization"
+        }
+      ]
     ]
   }
 }

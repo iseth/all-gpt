@@ -5,6 +5,9 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Drawer } from "expo-router/drawer";
 import { SQLiteProvider, useSQLiteContext } from "expo-sqlite";
 
+import * as Sentry from '@sentry/react-native';
+import { isRunningInExpoGo } from 'expo';
+
 import HeaderTitle from "../Components/Headers/HeaderTitle";
 import {
   DrawerContentScrollView,
@@ -16,6 +19,22 @@ import Icons from "../Components/Icons/Icon";
 import SwipeRow from "../Components/Swipe/SwipeRow";
 
 export default function HomeLayout() {
+  // Construct a new instrumentation instance. This is needed to communicate between the integration and React
+  const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
+
+  Sentry.init({
+    dsn: "https://536d6b1fbd818b0681c768f01073af60@o4507444352516096.ingest.us.sentry.io/4507451068907520",
+    debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+    integrations: [
+      new Sentry.ReactNativeTracing({
+        // Pass instrumentation to be used as `routingInstrumentation`
+        routingInstrumentation,
+        enableNativeFramesTracking: !isRunningInExpoGo(),
+        // ...
+      }),
+    ],
+  });
+
   if (Platform.OS !== "web") {
     console.log(`Platform.OS: `, Platform.OS);
 

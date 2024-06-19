@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Button,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
@@ -15,6 +16,7 @@ import { useTheme } from "../Context/ThemeContext";
 import InputPrompt from "../Components/Inputs/InputPrompt";
 import ButtonAdd from "../Components/Buttons/ButtonAdd";
 import { useSQLiteContext } from "expo-sqlite";
+import * as Sentry from "@sentry/react-native";
 
 import { useLocalSearchParams, useNavigation } from "expo-router";
 
@@ -195,7 +197,6 @@ const Chat = () => {
             keyboardVerticalOffset={110}
           >
             <Messages messages={messages} scrollViewRef={scrollViewRef} />
-
             <ScrollView
               className="h-0 max-h-[100px] py-2 mx-1"
               horizontal={true}
