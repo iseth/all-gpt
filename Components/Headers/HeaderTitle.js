@@ -47,6 +47,42 @@ const HeaderTitle = () => {
       api: "openai",
       url: "https://api.openai.com/v1/chat/completions",
     },
+    {
+      version: "72B",
+      title: "Qwen/Qwen2",
+      model: "Qwen/Qwen2-72B-Instruct",
+      iconName: "sparkles",
+      collectionName: "Ionicons",
+      api: "together",
+      url: "https://api.together.xyz/v1/chat/completions",
+    },
+    {
+      version: "7B",
+      title: "Mistral",
+      model: "mistralai/Mistral-7B-Instruct-v0.3",
+      iconName: "sparkles",
+      collectionName: "Ionicons",
+      api: "together",
+      url: "https://api.together.xyz/v1/chat/completions",
+    },
+    {
+      version: "110B",
+      title: "Qwen/Qwen1.5",
+      model: "Qwen/Qwen1.5-110B-Chat",
+      iconName: "sparkles",
+      collectionName: "Ionicons",
+      api: "together",
+      url: "https://api.together.xyz/v1/chat/completions",
+    },
+    {
+      version: "Snowflake",
+      title: "Snowflake",
+      model: "Snowflake/snowflake-arctic-instruct",
+      iconName: "sparkles",
+      collectionName: "Ionicons",
+      api: "together",
+      url: "https://api.together.xyz/v1/chat/completions",
+    },
   ];
 
   const handleSelect = async (option) => {
