@@ -2,15 +2,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { TextDecoder } from "text-encoding";
 
 // This function now retrieves the AsyncStorage API key and uses it to authorize the request
-export async function streamChat(args) {
-  const { messages, config, onChunk } = args;
+export async function streamChatTogether(args) {
+  const { messages, config, onChunk, url } = args;
 
   // Retrieve API key from AsyncStorage
   const apiKey = await AsyncStorage.getItem("together");
   if (!apiKey) {
     throw new Error("API key not found. Please set your OpenAI API key.");
   }
-  console.log(apiKey);
   const commonHeaders = {
     "Content-Type": "application/json",
     Authorization: `Bearer ${apiKey}`,
@@ -21,7 +20,7 @@ export async function streamChat(args) {
     reactNative: { textStreaming: true },
   };
 
-  const response = await fetch("https://api.together.xyz/v1/chat/completions", {
+  const response = await fetch(url, {
     method: "POST",
     headers: commonHeaders,
     body: JSON.stringify({
@@ -31,7 +30,6 @@ export async function streamChat(args) {
     }),
     ...extraOptions,
   });
-  console.log(response, "responseeee");
   if (!response.ok) {
     throw new Error(`Error: ${response.statusText}`);
   }
@@ -40,7 +38,6 @@ export async function streamChat(args) {
 }
 
 async function readChunks(response, onChunk) {
-  console.log(response, "response");
   const reader = response.body?.getReader();
   if (!reader) {
     throw new Error("Error: fail to read data from response");
@@ -63,11 +60,19 @@ function parseChunkData(value) {
   const items = chunkData
     .split("\n")
     .map((str) => str.trim())
-    .filter((str) => str.startsWith("data: {")) // Only keep lines that appear to contain valid JSON
+    .filter((str) => str.startsWith("data:")) // Only keep lines that appear to contain valid JSON
     .map((str) => {
       try {
         // Remove the "data: " prefix and then parse the JSON
-        return JSON.parse(str.substring(6));
+        if (str.startsWith("data: {")) {
+          try {
+            return JSON.parse(str.substring(6));
+          } catch (error) {
+            console.log(error);
+          }
+        } else {
+          return str;
+        }
       } catch (e) {
         console.error("Error parsing JSON:", e);
         return null; // Return null if there is a parsing error
